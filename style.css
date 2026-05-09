@@ -492,7 +492,56 @@ body {
   color: #fff;
 }
 
-/* ─ Screen 3: Upload (light, UploadForm) ─ */
+/* ─ KitaCard (echte App-Komponente, Screen 2) ─ */
+.sc-kita-card {
+  margin: 0 10px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 8px 10px;
+  transition: border-color 0.15s;
+}
+.sc-kita-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 4px;
+  margin-bottom: 2px;
+}
+.sc-kita-name {
+  height: 5px;
+  border-radius: 3px;
+  background: #18181b;
+  flex: 1;
+  width: 75%;
+  max-width: 75%;
+}
+.sc-kita-badge {
+  font-size: 5.5px;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 20px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.sc-kita-addr {
+  height: 4px;
+  border-radius: 2px;
+  background: #d4d4d8;
+  flex: 1;
+  max-width: 60%;
+}
+.sc-kita-apply-btn {
+  margin-top: 6px;
+  background: #2563eb;
+  border-radius: 7px;
+  padding: 5px;
+  text-align: center;
+  font-size: 6.5px;
+  font-weight: 700;
+  color: #fff;
+}
+
 .screen-upload {
   background: #f4f4f5;
   padding: 52px 0 0;
@@ -715,7 +764,7 @@ body {
 }
 .sidebar-logo-icon {
   width: 22px; height: 22px;
-  background: #6366f1;
+  background: #2563eb;
   border-radius: 6px;
   display: flex;
   align-items: center;
