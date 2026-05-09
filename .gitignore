@@ -1,0 +1,9 @@
+node_modules/
+.DS_Store
+.env
+.ipynb_checkpoints
+*.tmp
+/tmp
+PRODUCT_CONTEXT.md
+transform.py
+_source_assets/

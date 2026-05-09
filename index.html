@@ -1,0 +1,1347 @@
+﻿<!DOCTYPE html>
+<html lang="de" class="scroll-smooth" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KitaRadar – Kita-Platz finden. KI-gestützt.</title>
+  <meta name="description" content="KitaRadar findet freie Kita-Plätze im Umkreis per Karte, priorisiert passende Einrichtungen per KI und erstellt individuelle Bewerbungsschreiben. DSGVO-konform, entwickelt in Deutschland.">
+  <meta name="theme-color" content="#070b14">
+  <meta property="og:title" content="KitaRadar – Kita-Platz finden. KI-gestützt.">
+  <meta property="og:description" content="Kartenbasierte Kita-Suche, KI-Suchassistenz und individuelle Bewerbungsschreiben – alles in einer App.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="de_DE">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- Anti-Flash: Theme vor erstem Paint setzen -->
+  <script>!function(){var t=localStorage.getItem('kr-theme')||'light';document.documentElement.setAttribute('data-theme',t);}();</script>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style type="text/tailwindcss">
+    @theme {
+      --color-bg:          #f8fafc;
+      --color-bg-alt:      #f1f5f9;
+      --color-surface:     #ffffff;
+      --color-accent:      #6366f1;
+      --color-accent-dim:  #4f46e5;
+      --color-text-main:   #0f172a;
+      --color-muted:       #475569;
+      --color-faint:       #94a3b8;
+      --color-dark-bg:     #070b14;
+      --font-sans:    'Inter', system-ui, -apple-system, sans-serif;
+      --font-display: 'Outfit', sans-serif;
+    }
+    body { font-family: var(--font-sans); background: var(--color-bg); color: var(--color-text-main); }
+    h1, h2, h3, h4, .font-display { font-family: var(--font-display); }
+    .gradient-text {
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    }
+  </style>
+</head>
+<body class="overflow-x-hidden antialiased">
+
+  <!-- ═══ NAVBAR ═══════════════════════════════════════════════ -->
+  <header id="nav" class="fixed top-0 left-0 right-0 z-[100] transition-all duration-300 py-4">
+    <div class="max-w-7xl mx-auto px-5 flex items-center justify-between gap-4">
+
+      <!-- Logo -->
+      <a href="#" class="flex items-center gap-2.5 shrink-0">
+        <div class="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-900/40">
+          <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline stroke-linecap="round" stroke-linejoin="round" points="9 22 9 12 15 12 15 22"/>
+          </svg>
+        </div>
+        <span class="text-xl font-black tracking-tight text-white font-display">KitaRadar</span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-1 bg-white/6 backdrop-blur border border-white/10 rounded-full px-2 py-1.5">
+        <a href="#features" class="px-4 py-2 text-sm font-medium text-white/60 hover:text-white transition-colors rounded-full hover:bg-white/5" data-de="Features" data-en="Features">Features</a>
+        <a href="#how" class="px-4 py-2 text-sm font-medium text-white/60 hover:text-white transition-colors rounded-full hover:bg-white/5" data-de="Wie es funktioniert" data-en="How it works">Wie es funktioniert</a>
+        <a href="#showcase" class="px-4 py-2 text-sm font-medium text-white/60 hover:text-white transition-colors rounded-full hover:bg-white/5" data-de="App ansehen" data-en="See the App">App ansehen</a>
+        <a href="#roi" class="px-4 py-2 text-sm font-medium text-white/60 hover:text-white transition-colors rounded-full hover:bg-white/5" data-de="Zeit-Rechner" data-en="Time Calculator">Zeit-Rechner</a>
+        <a href="#pricing" class="px-4 py-2 text-sm font-medium text-white/60 hover:text-white transition-colors rounded-full hover:bg-white/5" data-de="Preise" data-en="Pricing">Preise</a>
+      </nav>
+
+      <!-- Right side: Lang + CTA + mobile menu -->
+      <div class="flex items-center gap-3">
+        <!-- Language Toggle -->
+        <div class="lang-toggle hidden md:flex">
+          <button id="lang-de" class="lang-btn active-lang" aria-label="Deutsch">DE</button>
+          <button id="lang-en" class="lang-btn" aria-label="English">EN</button>
+        </div>
+
+        <!-- Theme Toggle -->
+        <button id="theme-toggle" class="theme-toggle hidden md:flex" aria-label="Farbschema wechseln" title="Hell/Dunkel">
+          <!-- Mond: im Hellmodus sichtbar → Klick wechselt zu Dunkel -->
+          <svg id="theme-icon-moon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+          </svg>
+          <!-- Sonne: im Dunkelm. sichtbar → Klick wechselt zu Hell -->
+          <svg id="theme-icon-sun" class="w-4 h-4" style="display:none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+          </svg>
+        </button>
+
+        <a href="https://kitaradar.vercel.app/" target="_blank" rel="noopener" class="hidden md:inline-flex items-center bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-full font-semibold text-sm transition-all shadow-lg shadow-indigo-900/40 active:scale-95" data-de="App öffnen" data-en="Open app">App öffnen</a>
+
+        <!-- Mobile hamburger -->
+        <button id="mobile-menu-btn" class="md:hidden flex flex-col gap-1.5 p-2" aria-expanded="false" aria-label="Menü">
+          <span class="w-5 h-0.5 bg-white/70 rounded"></span>
+          <span class="w-5 h-0.5 bg-white/70 rounded"></span>
+          <span class="w-5 h-0.5 bg-white/70 rounded"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Nav Dropdown -->
+    <div id="mobile-nav" class="hidden md:hidden mt-2 mx-4 bg-slate-900/95 backdrop-blur border border-white/10 rounded-2xl p-4">
+      <div class="flex flex-col gap-1">
+        <a href="#features" class="px-4 py-3 text-sm font-medium text-white/70 hover:text-white hover:bg-white/5 rounded-xl transition-colors" data-de="Features" data-en="Features">Features</a>
+        <a href="#how" class="px-4 py-3 text-sm font-medium text-white/70 hover:text-white hover:bg-white/5 rounded-xl transition-colors" data-de="Wie es funktioniert" data-en="How it works">Wie es funktioniert</a>
+        <a href="#showcase" class="px-4 py-3 text-sm font-medium text-white/70 hover:text-white hover:bg-white/5 rounded-xl transition-colors" data-de="App ansehen" data-en="See the App">App ansehen</a>
+        <a href="#roi" class="px-4 py-3 text-sm font-medium text-white/70 hover:text-white hover:bg-white/5 rounded-xl transition-colors" data-de="Zeit-Rechner" data-en="Time Calculator">Zeit-Rechner</a>
+        <a href="#pricing" class="px-4 py-3 text-sm font-medium text-white/70 hover:text-white hover:bg-white/5 rounded-xl transition-colors" data-de="Preise" data-en="Pricing">Preise</a>
+        <hr class="border-white/10 my-2">
+        <div class="lang-toggle mx-4 mb-2 w-fit">
+          <button id="lang-de-m" class="lang-btn active-lang" aria-label="Deutsch">DE</button>
+          <button id="lang-en-m" class="lang-btn" aria-label="English">EN</button>
+        </div>
+        <a href="https://kitaradar.vercel.app/" target="_blank" rel="noopener" class="bg-indigo-600 text-white px-4 py-3 rounded-xl font-semibold text-sm text-center transition-all" data-de="App öffnen" data-en="Open app">App öffnen</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══ HERO ══════════════════════════════════════════════════ -->
+  <section id="hero" class="relative min-h-screen flex items-center overflow-hidden" style="background:#070b14;">
+    <!-- Glow Orbs -->
+    <div class="orb w-[600px] h-[600px] bg-indigo-600/25 -top-32 -left-32"></div>
+    <div class="orb w-[500px] h-[500px] bg-violet-600/15 bottom-0 right-0" style="animation-delay:3s;"></div>
+
+    <div class="max-w-7xl mx-auto px-5 pt-28 pb-20 w-full">
+      <div class="flex flex-col lg:flex-row items-center gap-16 lg:gap-20">
+
+        <!-- Left: Text -->
+        <div class="flex-1 text-center lg:text-left">
+          <!-- Badge -->
+          <div class="inline-flex items-center gap-2 bg-indigo-500/10 border border-indigo-500/20 px-4 py-2 rounded-full mb-8 reveal">
+            <span class="flex h-2 w-2 rounded-full bg-indigo-400 animate-ping"></span>
+            <span class="text-indigo-300 text-xs font-bold uppercase tracking-widest" data-de="Neu: KI-gestützte Kita-Suche" data-en="New: AI-powered Kita search">Neu: KI-gestützte Kita-Suche</span>
+          </div>
+
+          <h1 class="text-5xl md:text-6xl xl:text-7xl font-black text-white mb-6 tracking-tight font-display leading-[1.05] reveal">
+            <span data-de="Kita-Platz finden." data-en="Find your Kita spot.">Kita-Platz finden.</span><br>
+            <span class="gradient-text" data-de="Endlich einfach." data-en="Finally simple.">Endlich einfach.</span>
+          </h1>
+
+          <p class="text-lg text-white/50 mb-10 leading-relaxed max-w-xl mx-auto lg:mx-0 reveal" data-de="KitaRadar zeigt freie Kita-Plätze im Umkreis auf der Karte, priorisiert passende Einrichtungen per KI und erstellt individuelle Bewerbungsschreiben – direkt aus der App, per E-Mail." data-en="KitaRadar shows available daycare spots near you on a map, prioritises matching facilities with AI, and creates personalised application letters – directly from the app, by email.">
+            KitaRadar zeigt freie Kita-Plätze im Umkreis auf der Karte, priorisiert passende Einrichtungen per KI und erstellt individuelle Bewerbungsschreiben – direkt aus der App, per E-Mail.
+          </p>
+
+          <div class="flex flex-wrap items-center gap-4 justify-center lg:justify-start reveal">
+            <a href="https://kitaradar.vercel.app/" target="_blank" rel="noopener" class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-7 py-4 rounded-2xl font-bold text-base transition-all shadow-xl shadow-indigo-900/40 active:scale-95">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+              <span data-de="App öffnen" data-en="Open app">App öffnen</span>
+            </a>
+            <a href="#showcase" class="inline-flex items-center gap-2 border border-white/15 hover:border-white/30 text-white/75 hover:text-white px-7 py-4 rounded-2xl font-bold text-base transition-all">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+              <span data-de="App ansehen" data-en="See the app">App ansehen</span>
+            </a>
+          </div>
+
+          <!-- Trust indicators -->
+          <div class="mt-10 flex flex-wrap items-center gap-5 justify-center lg:justify-start reveal">
+            <div class="flex items-center gap-2 text-white/35 text-xs font-medium">
+              <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+              <span data-de="DSGVO-konform" data-en="GDPR compliant">DSGVO-konform</span>
+            </div>
+            <div class="flex items-center gap-2 text-white/35 text-xs font-medium">
+              <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6H8l-1-1H5a2 2 0 00-2 2zm9-13.5V9"/></svg>
+              <span data-de="Entwickelt in Deutschland" data-en="Made in Germany">Entwickelt in Deutschland</span>
+            </div>
+            <div class="flex items-center gap-2 text-white/35 text-xs font-medium">
+              <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <span data-de="In &lt; 5 Min. einsatzbereit" data-en="Ready in &lt; 5 min.">In &lt; 5 Min. einsatzbereit</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: iPhone 15 Pro Titanium -->
+        <div class="flex-shrink-0 reveal flex flex-col items-center gap-6">
+          <div class="iphone-frame">
+            <div class="iphone-inner">
+              <div class="iphone-island"></div>
+              <div class="iphone-screen">
+
+                <!-- Screen 1: Dashboard (echte App-UI) -->
+                <div class="app-screen active screen-dashboard">
+                  <!-- App-Bar -->
+                  <div class="sc-app-bar">
+                    <div class="sc-app-logo">
+                      <div class="sc-logo-dot">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline stroke-linecap="round" stroke-linejoin="round" points="9 22 9 12 15 12 15 22"/></svg>
+                      </div>
+                      <span class="sc-logo-text">KitaRadar</span>
+                    </div>
+                    <div class="sc-new-btn">+ Neue Suche</div>
+                  </div>
+                  <!-- Upgrade-Banner (Free-Nutzer) -->
+                  <div class="sc-upgrade-banner">
+                    <div class="sc-upgrade-text">Upgrade auf Pro – KI-Suche freischalten</div>
+                    <div class="sc-upgrade-cta">Pro →</div>
+                  </div>
+                  <!-- Seitentitel -->
+                  <div class="sc-page-title">Meine Bewerbungen</div>
+                  <!-- Scan-Liste -->
+                  <div class="sc-scan-list">
+                    <!-- Item 1: gesendet -->
+                    <div class="sc-scan-item">
+                      <div class="sc-scan-icon">
+                        <svg width="11" height="11" viewBox="0 0 20 20" fill="#2563eb"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
+                      </div>
+                      <div class="sc-scan-info">
+                        <div class="sc-scan-name" style="width:80%;"></div>
+                        <div class="sc-scan-date" style="margin-top:3px;width:50%;"></div>
+                      </div>
+                      <div class="sc-badge sc-badge-green">Gesendet · 1 Kita</div>
+                    </div>
+                    <!-- Item 2: entwurf -->
+                    <div class="sc-scan-item">
+                      <div class="sc-scan-icon">
+                        <svg width="11" height="11" viewBox="0 0 20 20" fill="#2563eb"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
+                      </div>
+                      <div class="sc-scan-info">
+                        <div class="sc-scan-name" style="width:65%;"></div>
+                        <div class="sc-scan-date" style="margin-top:3px;width:40%;"></div>
+                      </div>
+                      <div class="sc-badge sc-badge-blue">Entwurf…</div>
+                    </div>
+                    <!-- Item 3: ausstehend -->
+                    <div class="sc-scan-item">
+                      <div class="sc-scan-icon">
+                        <svg width="11" height="11" viewBox="0 0 20 20" fill="#2563eb"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
+                      </div>
+                      <div class="sc-scan-info">
+                        <div class="sc-scan-name" style="width:70%;"></div>
+                        <div class="sc-scan-date" style="margin-top:3px;width:42%;"></div>
+                      </div>
+                      <div class="sc-badge sc-badge-yellow">Ausstehend</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Screen 2: Scan-Ergebnis / FindingCard -->
+                <div class="app-screen screen-result">
+                  <!-- Navigation Bar -->
+                  <div class="sc-result-bar">
+                    <div class="sc-back-arrow">←</div>
+                    <div class="sc-result-bar-title">Kita-Ergebnis</div>
+                  </div>
+                  <!-- Status-Karte -->
+                  <div class="sc-status-card">
+                    <div style="flex:1;min-width:0;">
+                      <div class="sc-status-filename"></div>
+                      <div class="sc-status-date"></div>
+                    </div>
+                    <div class="sc-errors-count">
+                      <div class="sc-errors-num">7</div>
+                      <div class="sc-errors-label">Kitas gefunden</div>
+                    </div>
+                  </div>
+                  <!-- Pflicht-Disclaimer -->
+                  <div class="sc-disclaimer">⚠️ Verfügbarkeiten können sich täglich ändern. Direkt bei der Kita anfragen.</div>
+                  <!-- Finding 1: Frei -->
+                  <div class="sc-finding-card high">
+                    <div class="sc-finding-header">
+                      <div class="sc-finding-type">Kita · Städtisch</div>
+                      <div class="sc-finding-sev">FREI</div>
+                    </div>
+                    <div class="sc-finding-expl"></div>
+                    <div class="sc-finding-expl2"></div>
+                    <div class="sc-finding-meta">
+                      <div class="sc-meta-item"><b>Entfernung</b>1,2 km</div>
+                      <div class="sc-meta-item"><b>Alter</b>0–3 Jahre</div>
+                    </div>
+                  </div>
+                  <!-- Finding 2: Warteliste -->
+                  <div class="sc-finding-card medium" style="margin-top:4px;">
+                    <div class="sc-finding-header">
+                      <div class="sc-finding-type sc-finding-medium-type">Kita · Ev. Träger</div>
+                      <div class="sc-finding-sev sc-finding-medium-sev">WARTELISTE</div>
+                    </div>
+                    <div class="sc-finding-expl" style="background:rgba(120,53,15,0.18);"></div>
+                    <div class="sc-finding-expl2" style="background:rgba(120,53,15,0.1);"></div>
+                  </div>
+                  <!-- Brief-Button -->
+                  <div class="sc-letter-btn">📧 Bewerbung schreiben</div>
+                </div>
+
+                <!-- Screen 3: KI-Suche / Neue Suche -->
+                <div class="app-screen screen-upload">
+                  <!-- Navigation Bar -->
+                  <div class="sc-upload-bar">
+                    <div class="sc-back-arrow">←</div>
+                    <div class="sc-upload-title">KI-Kita-Suche</div>
+                  </div>
+                  <!-- Body -->
+                  <div class="sc-upload-body">
+                    <div>
+                      <div class="sc-upload-heading">Kita per KI suchen</div>
+                      <div class="sc-upload-sub">Umkreis, Alter, Träger &amp; mehr</div>
+                    </div>
+                    <!-- Drop-Zone repurposed as search card -->
+                    <div class="sc-dropzone">
+                      <div class="sc-dropzone-icon">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                      </div>
+                      <div class="sc-dropzone-main">Adresse eingeben</div>
+                      <div class="sc-dropzone-sub">oder Standort verwenden</div>
+                      <div class="sc-dropzone-tag">Karte · Radius · Filter</div>
+                    </div>
+                    <!-- Schritt-Anleitung -->
+                    <div class="sc-guide-card">
+                      <div class="sc-guide-title">So findest du eine Kita:</div>
+                      <div class="sc-guide-step">
+                        <div class="sc-step-num">1</div>
+                        <div class="sc-step-text"></div>
+                      </div>
+                      <div class="sc-guide-step">
+                        <div class="sc-step-num">2</div>
+                        <div class="sc-step-text" style="width:70%;"></div>
+                      </div>
+                      <div class="sc-guide-step">
+                        <div class="sc-step-num">3</div>
+                        <div class="sc-step-text" style="width:55%;"></div>
+                      </div>
+                    </div>
+                    <!-- Suche-Button -->
+                    <div class="sc-letter-btn">Suche starten →</div>
+                  </div>
+                </div>
+
+              </div><!-- /iphone-screen -->
+            </div><!-- /iphone-inner -->
+          </div><!-- /iphone-frame -->
+
+          <!-- Floating notification -->
+          <div class="toast-animate flex items-center gap-3 bg-slate-800/90 backdrop-blur border border-white/10 px-4 py-3 rounded-2xl shadow-2xl text-sm text-white" style="max-width:230px;">
+            <div class="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <div>
+              <div class="font-semibold text-xs" data-de="Bewerbung vorbereitet" data-en="Application prepared">Bewerbung vorbereitet</div>
+              <div class="text-white/40 text-[10px]" data-de="E-Mail wird geöffnet …" data-en="Opening email …">E-Mail wird geöffnet …</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ TRUST BAR – Marktdaten-Laufband ══════════════════════ -->
+  <section id="trust-bar" style="background:#0c1120;border-top:1px solid rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.05);" class="py-8 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-5 mb-5">
+      <p class="text-center text-white/25 text-xs font-semibold uppercase tracking-widest" data-de="Marktdaten · Quellen: DJI 2024 · BMFSFJ 2024 · Bertelsmann Stiftung 2024" data-en="Market data · Sources: DJI 2024 · BMFSFJ 2024 · Bertelsmann Stiftung 2024">Marktdaten · Quellen: DJI 2024 · BMFSFJ 2024 · Bertelsmann Stiftung 2024</p>
+    </div>
+    <div class="relative overflow-hidden">
+      <div class="marquee-track" style="width:max-content;">
+        <!-- Set 1 -->
+        <div class="trust-logo">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#818cf8" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          <span style="font-size:.875rem;font-weight:600;color:rgba(255,255,255,0.65);" data-de="306.000 fehlende Kita-Plätze · DJI 2024" data-en="306,000 missing daycare spots · DJI 2024">306.000 fehlende Kita-Plätze · DJI 2024</span>
+        </div>
+        <div class="trust-logo">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#f59e0b" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <span style="font-size:.875rem;font-weight:600;color:rgba(255,255,255,0.65);" data-de="> 60 % bewerben sich bei 5+ Kitas · BMFSFJ 2024" data-en="> 60 % apply to 5+ daycare centres · BMFSFJ 2024">&gt; 60 % bewerben sich bei 5+ Kitas · BMFSFJ 2024</span>
+        </div>
+        <div class="trust-logo">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#ef4444" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span style="font-size:.875rem;font-weight:600;color:rgba(255,255,255,0.65);" data-de="6–12 Monate durchschnittliche Wartezeit · Bertelsmann 2024" data-en="6–12 months average wait · Bertelsmann 2024">6–12 Monate durchschnittliche Wartezeit · Bertelsmann 2024</span>
+        </div>
+        <div class="trust-logo">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#10b981" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span style="font-size:.875rem;font-weight:600;color:rgba(255,255,255,0.65);" data-de="30–45 % scheitern an Trägerfragmentierung" data-en="30–45 % fail due to provider fragmentation">30–45 % scheitern an Trägerfragmentierung</span>
+        </div>
+        <div class="trust-logo">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#6366f1" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          <span style="font-size:.875rem;font-weight:600;color:rgba(255,255,255,0.65);" data-de="Karte + KI = schneller Kita finden" data-en="Map + AI = find daycare faster">Karte + KI = schneller Kita finden</span>
+        </div>
+        <div class="trust-logo">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          <span style="font-size:.875rem;font-weight:600;color:rgba(255,255,255,0.65);" data-de="KI-Bewerbungsbrief in Sekunden · KitaRadar" data-en="AI application letter in seconds · KitaRadar">KI-Bewerbungsbrief in Sekunden · KitaRadar</span>
+        </div>
+        <div class="trust-logo">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6H8l-1-1H5a2 2 0 00-2 2zm9-13.5V9"/></svg>
+          <span style="font-size:.875rem;font-weight:600;color:rgba(255,255,255,0.65);" data-de="Entwickelt in Deutschland · WAMOCON GmbH" data-en="Made in Germany · WAMOCON GmbH">Entwickelt in Deutschland · WAMOCON GmbH</span>
+        </div>
+        <!-- Set 2 (Duplikat für nahtlose Schleife) -->
+        <div class="trust-logo">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#818cf8" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          <span style="font-size:.875rem;font-weight:600;color:rgba(255,255,255,0.65);" data-de="306.000 fehlende Kita-Plätze · DJI 2024" data-en="306,000 missing daycare spots · DJI 2024">306.000 fehlende Kita-Plätze · DJI 2024</span>
+        </div>
+        <div class="trust-logo">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#f59e0b" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <span style="font-size:.875rem;font-weight:600;color:rgba(255,255,255,0.65);" data-de="> 60 % bewerben sich bei 5+ Kitas · BMFSFJ 2024" data-en="> 60 % apply to 5+ daycare centres · BMFSFJ 2024">&gt; 60 % bewerben sich bei 5+ Kitas · BMFSFJ 2024</span>
+        </div>
+        <div class="trust-logo">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#ef4444" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span style="font-size:.875rem;font-weight:600;color:rgba(255,255,255,0.65);" data-de="6–12 Monate durchschnittliche Wartezeit · Bertelsmann 2024" data-en="6–12 months average wait · Bertelsmann 2024">6–12 Monate durchschnittliche Wartezeit · Bertelsmann 2024</span>
+        </div>
+        <div class="trust-logo">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#10b981" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span style="font-size:.875rem;font-weight:600;color:rgba(255,255,255,0.65);" data-de="30–45 % scheitern an Trägerfragmentierung" data-en="30–45 % fail due to provider fragmentation">30–45 % scheitern an Trägerfragmentierung</span>
+        </div>
+        <div class="trust-logo">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#6366f1" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          <span style="font-size:.875rem;font-weight:600;color:rgba(255,255,255,0.65);" data-de="Karte + KI = schneller Kita finden" data-en="Map + AI = find daycare faster">Karte + KI = schneller Kita finden</span>
+        </div>
+        <div class="trust-logo">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          <span style="font-size:.875rem;font-weight:600;color:rgba(255,255,255,0.65);" data-de="KI-Bewerbungsbrief in Sekunden · KitaRadar" data-en="AI application letter in seconds · KitaRadar">KI-Bewerbungsbrief in Sekunden · KitaRadar</span>
+        </div>
+        <div class="trust-logo">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6H8l-1-1H5a2 2 0 00-2 2zm9-13.5V9"/></svg>
+          <span style="font-size:.875rem;font-weight:600;color:rgba(255,255,255,0.65);" data-de="Entwickelt in Deutschland · WAMOCON GmbH" data-en="Made in Germany · WAMOCON GmbH">Entwickelt in Deutschland · WAMOCON GmbH</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ MARKTDATEN-STATISTIKEN ════════════════════════════════ -->
+  <section style="background:#f8fafc;" class="py-16">
+    <div class="max-w-7xl mx-auto px-5">
+      <div class="text-center mb-10 reveal">
+        <p class="text-slate-400 text-xs font-semibold uppercase tracking-widest mb-2" data-de="Belegte Zahlen zum deutschen Kita-Markt" data-en="Verified figures on the German daycare market">Belegte Zahlen zum deutschen Kita-Markt</p>
+        <h2 class="text-2xl md:text-3xl font-black text-slate-900 font-display tracking-tight" data-de="Das Problem ist größer als Sie denken." data-en="The problem is bigger than you think.">Das Problem ist größer als Sie denken.</h2>
+      </div>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-5 reveal">
+        <!-- Stat 1 -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm text-center">
+          <div class="text-4xl font-black text-indigo-600 font-display mb-1">306.000</div>
+          <div class="text-sm font-semibold text-slate-700 mb-1" data-de="Fehlende Kita-Plätze in Deutschland" data-en="Missing daycare spots in Germany">Fehlende Kita-Plätze in Deutschland</div>
+          <div class="text-[11px] text-slate-400 leading-snug" data-de="Deutsches Jugendinstitut (DJI), 2024" data-en="German Youth Institute (DJI), 2024">Deutsches Jugendinstitut (DJI), 2024</div>
+        </div>
+        <!-- Stat 2 -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm text-center">
+          <div class="text-4xl font-black text-amber-500 font-display mb-1">&gt; 60 %</div>
+          <div class="text-sm font-semibold text-slate-700 mb-1" data-de="Eltern bewerben sich bei 5+ Kitas" data-en="Parents apply to 5+ daycare centres">Eltern bewerben sich bei 5+ Kitas</div>
+          <div class="text-[11px] text-slate-400 leading-snug" data-de="BMFSFJ, Kita-Studie 2024" data-en="BMFSFJ, Daycare Study 2024">BMFSFJ, Kita-Studie 2024</div>
+        </div>
+        <!-- Stat 3 -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm text-center">
+          <div class="text-4xl font-black text-red-500 font-display mb-1">6–12 Mo.</div>
+          <div class="text-sm font-semibold text-slate-700 mb-1" data-de="Durchschnittliche Wartezeit" data-en="Average waiting time">Durchschnittliche Wartezeit</div>
+          <div class="text-[11px] text-slate-400 leading-snug" data-de="Bertelsmann Stiftung, Kita-Monitor 2024" data-en="Bertelsmann Foundation, Kita Monitor 2024">Bertelsmann Stiftung, Kita-Monitor 2024</div>
+        </div>
+        <!-- Stat 4 -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm text-center">
+          <div class="text-4xl font-black text-emerald-600 font-display mb-1">30–45 %</div>
+          <div class="text-sm font-semibold text-slate-700 mb-1" data-de="Scheitern an Trägerfragmentierung" data-en="Fail due to provider fragmentation">Scheitern an Trägerfragmentierung</div>
+          <div class="text-[11px] text-slate-400 leading-snug" data-de="Bertelsmann Stiftung, Kita-Monitor 2024" data-en="Bertelsmann Foundation, Kita Monitor 2024">Bertelsmann Stiftung, Kita-Monitor 2024</div>
+        </div>
+      </div>
+      <p class="text-center text-slate-300 text-[11px] mt-6" data-de="Alle Zahlen aus öffentlich zugänglichen, zitierten Quellen. Keine Hochrechnungen. Keine erfundenen Statistiken." data-en="All figures from publicly accessible, cited sources. No projections. No invented statistics.">Alle Zahlen aus öffentlich zugänglichen, zitierten Quellen. Keine Hochrechnungen. Keine erfundenen Statistiken.</p>
+
+      <div class="flex flex-col md:flex-row items-start md:items-center gap-8 md:gap-0 justify-center">
+        <!-- Step 1 -->
+        <div class="flex-1 flex flex-col items-center text-center px-6 reveal">
+          <div class="w-16 h-16 rounded-2xl bg-indigo-600 flex items-center justify-center mb-5 shadow-lg shadow-indigo-200">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          </div>
+          <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 font-black text-sm flex items-center justify-center mb-3">1</div>
+          <h3 class="font-bold text-slate-900 text-xl mb-2" data-de="Standort &amp; Radius wählen" data-en="Choose location &amp; radius">Standort &amp; Radius wählen</h3>
+          <p class="text-slate-500 text-sm leading-relaxed" data-de="Gib deine Adresse ein oder nutze deinen Standort – KitaRadar zeigt alle Kitas im gewünschten Radius auf der Karte." data-en="Enter your address or use your location – KitaRadar shows all daycare centres within your chosen radius on the map.">Gib deine Adresse ein oder nutze deinen Standort – KitaRadar zeigt alle Kitas im gewünschten Radius auf der Karte.</p>
+        </div>
+
+        <div class="step-connector hidden md:block"></div>
+
+        <!-- Step 2 -->
+        <div class="flex-1 flex flex-col items-center text-center px-6 reveal">
+          <div class="w-16 h-16 rounded-2xl bg-violet-600 flex items-center justify-center mb-5 shadow-lg shadow-violet-200">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </div>
+          <div class="w-8 h-8 rounded-full bg-violet-100 text-violet-700 font-black text-sm flex items-center justify-center mb-3">2</div>
+          <h3 class="font-bold text-slate-900 text-xl mb-2" data-de="KI filtert &amp; priorisiert" data-en="AI filters &amp; prioritises">KI filtert &amp; priorisiert</h3>
+          <p class="text-slate-500 text-sm leading-relaxed" data-de="Die KI berücksichtigt Alter des Kindes, gewünschte Öffnungszeiten, Trägertyp und freie Plätze – und sortiert passende Kitas automatisch." data-en="The AI considers your child's age, preferred opening hours, provider type and available spots – and automatically sorts the best matches.">Die KI berücksichtigt Alter des Kindes, gewünschte Öffnungszeiten, Trägertyp und freie Plätze – und sortiert passende Kitas automatisch.</p>
+        </div>
+
+        <div class="step-connector hidden md:block"></div>
+
+        <!-- Step 3 -->
+        <div class="flex-1 flex flex-col items-center text-center px-6 reveal">
+          <div class="w-16 h-16 rounded-2xl bg-emerald-600 flex items-center justify-center mb-5 shadow-lg shadow-emerald-200">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </div>
+          <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 font-black text-sm flex items-center justify-center mb-3">3</div>
+          <h3 class="font-bold text-slate-900 text-xl mb-2" data-de="Bewerbung per KI erstellen &amp; senden" data-en="Create &amp; send application with AI">Bewerbung per KI erstellen &amp; senden</h3>
+          <p class="text-slate-500 text-sm leading-relaxed" data-de="KitaRadar erstellt ein individuelles Bewerbungsschreiben und öffnet es direkt als E-Mail-Entwurf – in Sekunden, per Klick." data-en="KitaRadar creates a personalised application letter and opens it directly as an email draft – in seconds, with one click.">KitaRadar erstellt ein individuelles Bewerbungsschreiben und öffnet es direkt als E-Mail-Entwurf – in Sekunden, per Klick.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ HAUPTFUNKTIONEN (BENTO GRID) ═════════════════════════ -->
+  <section id="features" class="py-28 bg-white">
+    <div class="max-w-7xl mx-auto px-5">
+      <div class="text-center mb-16 reveal">
+        <div class="section-chip mb-5" data-de="Kernfunktionen" data-en="Core features">Kernfunktionen</div>
+        <h2 class="text-4xl md:text-5xl font-black text-slate-900 font-display tracking-tight mb-4" data-de="Was KitaRadar wirklich kann." data-en="What KitaRadar really does.">Was KitaRadar wirklich kann.</h2>
+        <p class="text-slate-500 text-lg max-w-xl mx-auto" data-de="Echte Funktionen aus der App – keine Marketingversprechen." data-en="Real features from the app – no marketing promises.">Echte Funktionen aus der App – keine Marketingversprechen.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <!-- CARD 1: Kartenbasierte Suche (large, 2-col) -->
+        <div class="bento-card lg:col-span-2 p-8 reveal">
+          <div class="flex flex-col h-full">
+            <div class="w-12 h-12 rounded-2xl bg-indigo-600 flex items-center justify-center mb-5 shadow-lg shadow-indigo-100">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            </div>
+            <h3 class="text-2xl font-bold text-slate-900 mb-2" data-de="Kartenbasierte Kita-Suche im Umkreis" data-en="Map-based daycare search by radius">Kartenbasierte Kita-Suche im Umkreis</h3>
+            <p class="text-slate-500 mb-6" data-de="Zeige alle Kitas im gewünschten Radius auf der Karte an. Filtere nach Träger, Alter, Öffnungszeiten und freien Plätzen – alles auf einen Blick." data-en="Display all daycare centres within your chosen radius on the map. Filter by provider, age, opening hours and available spots – all at a glance.">Zeige alle Kitas im gewünschten Radius auf der Karte an. Filtere nach Träger, Alter, Öffnungszeiten und freien Plätzen – alles auf einen Blick.</p>
+            <!-- Map Mockup -->
+            <div class="mt-auto bg-slate-50 rounded-2xl p-5 border border-slate-100">
+              <div class="flex gap-2 mb-4">
+                <div class="flex-1 h-1.5 rounded-full bg-indigo-600"></div>
+                <div class="flex-1 h-1.5 rounded-full bg-indigo-400"></div>
+                <div class="flex-1 h-1.5 rounded-full bg-slate-200"></div>
+              </div>
+              <div class="text-xs font-semibold text-indigo-600 mb-3" data-de="7 Kitas in 2 km Umkreis gefunden" data-en="7 daycare centres found within 2 km radius">7 Kitas in 2 km Umkreis gefunden</div>
+              <div class="grid grid-cols-2 gap-3">
+                <div class="bg-white rounded-xl p-3 border border-slate-200">
+                  <div class="text-[10px] text-slate-400 font-semibold uppercase tracking-wide mb-1.5" data-de="Nächste Kita" data-en="Nearest daycare">Nächste Kita</div>
+                  <div class="text-sm font-bold text-indigo-600">0,4 km</div>
+                </div>
+                <div class="bg-white rounded-xl p-3 border border-slate-200">
+                  <div class="text-[10px] text-slate-400 font-semibold uppercase tracking-wide mb-1.5" data-de="Mit freiem Platz" data-en="With free spot">Mit freiem Platz</div>
+                  <div class="text-sm font-bold text-emerald-600" data-de="3 Kitas" data-en="3 daycare">3 Kitas</div>
+                </div>
+                <div class="bg-white rounded-xl p-3 border border-slate-200">
+                  <div class="text-[10px] text-slate-400 font-semibold uppercase tracking-wide mb-1.5" data-de="Trägertypen" data-en="Provider types">Trägertypen</div>
+                  <div class="text-sm font-semibold text-slate-700" data-de="Städtisch, Ev., AWO" data-en="Municipal, Ev., AWO">Städtisch, Ev., AWO</div>
+                </div>
+                <div class="bg-white rounded-xl p-3 border border-slate-200">
+                  <div class="text-[10px] text-slate-400 font-semibold uppercase tracking-wide mb-1.5" data-de="Altersgruppe" data-en="Age group">Altersgruppe</div>
+                  <div class="text-sm font-semibold text-slate-700">0–3 Jahre</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 2: KI-Bewerbungsgenerator -->
+        <div class="bento-card p-8 reveal">
+          <div class="w-12 h-12 rounded-2xl bg-violet-600 flex items-center justify-center mb-5 shadow-lg shadow-violet-100">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </div>
+          <h3 class="text-xl font-bold text-slate-900 mb-2" data-de="KI-Bewerbungsgenerator" data-en="AI application generator">KI-Bewerbungsgenerator</h3>
+          <p class="text-slate-500 text-sm mb-5" data-de="KitaRadar erstellt individuelle Bewerbungsschreiben per KI und öffnet sie direkt als E-Mail-Entwurf – kein Kopieren, kein Tippen, kein Stress." data-en="KitaRadar creates personalised application letters using AI and opens them directly as an email draft – no copying, no typing, no stress.">KitaRadar erstellt individuelle Bewerbungsschreiben per KI und öffnet sie direkt als E-Mail-Entwurf – kein Kopieren, kein Tippen, kein Stress.</p>
+          <!-- Letter Mockup -->
+          <div class="space-y-2.5 mt-auto">
+            <div class="flex items-center gap-3 bg-slate-50 rounded-xl p-3 border border-slate-200">
+              <svg class="w-4 h-4 text-indigo-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              <div class="flex-1">
+                <div class="text-xs font-semibold text-slate-700" data-de="Kita Sonnenschein – Bewerbung.eml" data-en="Kita Sonnenschein – Application.eml">Kita Sonnenschein – Bewerbung.eml</div>
+                <div class="text-[10px] text-slate-400" data-de="KI-generiert · mailto-Link · sofort bereit" data-en="AI-generated · mailto link · ready instantly">KI-generiert · mailto-Link · sofort bereit</div>
+              </div>
+              <div class="flex items-center gap-1.5 shrink-0">
+                <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
+                <span class="text-[10px] font-bold text-emerald-600" data-de="Bereit" data-en="Ready">Bereit</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 bg-slate-50 rounded-xl p-3 border border-slate-200">
+              <svg class="w-4 h-4 text-violet-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              <div class="flex-1">
+                <div class="text-xs font-semibold text-slate-700" data-de="Kita Regenbogen – Bewerbung.eml" data-en="Kita Regenbogen – Application.eml">Kita Regenbogen – Bewerbung.eml</div>
+                <div class="text-[10px] text-slate-400" data-de="KI-generiert · individuelle Ansprache" data-en="AI-generated · personalised address">KI-generiert · individuelle Ansprache</div>
+              </div>
+              <div class="flex items-center gap-1.5 shrink-0">
+                <div class="w-2 h-2 rounded-full bg-slate-300"></div>
+                <span class="text-[10px] font-semibold text-slate-400" data-de="Entwurf" data-en="Draft">Entwurf</span>
+              </div>
+            </div>
+            <!-- DSGVO Hinweis -->
+            <div class="flex items-start gap-2 mt-3 px-1 bg-indigo-50 rounded-xl p-2.5 border border-indigo-100">
+              <svg class="w-4 h-4 text-indigo-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+              <span class="text-[10px] text-indigo-700 leading-snug" data-de="DSGVO-konform. Keine Daten an Dritte. Verarbeitung auf EU-Servern." data-en="GDPR-compliant. No data shared with third parties. Processing on EU servers.">DSGVO-konform. Keine Daten an Dritte. Verarbeitung auf EU-Servern.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 3: KI-Suchassistent -->
+        <div class="bento-card p-8 reveal">
+          <div class="w-12 h-12 rounded-2xl bg-amber-500 flex items-center justify-center mb-5 shadow-lg shadow-amber-100">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+          </div>
+          <h3 class="text-xl font-bold text-slate-900 mb-2" data-de="KI-Suchassistent" data-en="AI search assistant">KI-Suchassistent</h3>
+          <p class="text-slate-500 text-sm mb-5" data-de="Beschreibe deine Wünsche im Chat – KitaRadar filtert nach Konzept, Alter, Öffnungszeiten und Träger. Keine komplizierten Formulare." data-en="Describe your preferences in chat – KitaRadar filters by concept, age, opening hours and provider. No complicated forms.">Beschreibe deine Wünsche im Chat – KitaRadar filtert nach Konzept, Alter, Öffnungszeiten und Träger. Keine komplizierten Formulare.</p>
+          <!-- Chat Mockup -->
+          <div class="mt-auto">
+            <div class="flex items-center gap-4 bg-indigo-50 border-2 border-indigo-200 rounded-2xl p-4">
+              <div class="w-12 h-14 bg-white border border-indigo-200 rounded-lg shadow-sm flex flex-col items-center justify-center gap-1">
+                <svg class="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                <span class="text-[8px] font-black text-indigo-600">KI</span>
+              </div>
+              <div>
+                <div class="font-bold text-sm text-slate-800" data-de="„Montessori, 0–2 J., Mo–Fr ganztags"" data-en=""Montessori, 0–2 y., Mon–Fri full day"">"Montessori, 0–2 J., Mo–Fr ganztags"</div>
+                <div class="text-xs text-slate-500 mt-0.5" data-de="→ 3 Kitas gefunden, 1 mit freiem Platz" data-en="→ 3 daycare found, 1 with free spot">→ 3 Kitas gefunden, 1 mit freiem Platz</div>
+                <div class="flex gap-1 mt-2">
+                  <span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700" data-de="Sofort antworten" data-en="Instant response">Sofort antworten</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 4: Bewerbungs-Tracking (large, 2-col) -->
+        <div class="bento-card lg:col-span-2 p-8 reveal">
+          <div class="flex flex-col md:flex-row gap-8 h-full">
+            <div class="flex-1">
+              <div class="w-12 h-12 rounded-2xl bg-emerald-600 flex items-center justify-center mb-5 shadow-lg shadow-emerald-100">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+              </div>
+              <h3 class="text-2xl font-bold text-slate-900 mb-2" data-de="Bewerbungs-Tracking &amp; Community" data-en="Application tracking &amp; community">Bewerbungs-Tracking &amp; Community</h3>
+              <p class="text-slate-500 mb-5" data-de="Verfolge alle gesendeten Bewerbungen im Überblick. Im Community-Feed teilen Eltern aktuelle Erfahrungen – so weißt du, welche Kitas wirklich antworten." data-en="Track all sent applications at a glance. In the community feed, parents share current experiences – so you know which daycare centres actually respond.">Verfolge alle gesendeten Bewerbungen im Überblick. Im Community-Feed teilen Eltern aktuelle Erfahrungen.</p>
+              <div class="flex flex-wrap gap-2">
+                <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-full px-3 py-1.5">
+                  <svg class="w-3.5 h-3.5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                  <span class="text-xs font-semibold text-slate-600" data-de="Status-Tracking" data-en="Status tracking">Status-Tracking</span>
+                </div>
+                <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-full px-3 py-1.5">
+                  <svg class="w-3.5 h-3.5 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                  <span class="text-xs font-semibold text-slate-600" data-de="Community-Feed" data-en="Community feed">Community-Feed</span>
+                </div>
+                <div class="flex items-center gap-2 bg-emerald-50 border border-emerald-200 rounded-full px-3 py-1.5">
+                  <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  <span class="text-xs font-semibold text-emerald-700" data-de="Antwort-Erinnerung" data-en="Reply reminder">Antwort-Erinnerung</span>
+                </div>
+              </div>
+            </div>
+            <!-- Mini tracking mockup -->
+            <div class="flex-shrink-0 bg-slate-50 rounded-2xl p-4 border border-slate-100 w-full md:w-56">
+              <div class="text-xs font-bold text-slate-700 mb-3 text-center" data-de="Meine Bewerbungen" data-en="My Applications">Meine Bewerbungen</div>
+              <div class="space-y-2">
+                <div class="flex items-center justify-between bg-white rounded-lg p-2 border border-slate-200">
+                  <span class="text-[10px] text-slate-700 font-semibold">Kita Sonnenschein</span>
+                  <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700" data-de="Gesendet" data-en="Sent">Gesendet</span>
+                </div>
+                <div class="flex items-center justify-between bg-white rounded-lg p-2 border border-slate-200">
+                  <span class="text-[10px] text-slate-700 font-semibold">Kita Regenbogen</span>
+                  <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-700" data-de="Ausstehend" data-en="Pending">Ausstehend</span>
+                </div>
+                <div class="flex items-center justify-between bg-white rounded-lg p-2 border border-slate-200">
+                  <span class="text-[10px] text-slate-700 font-semibold">Kita Sterntaler</span>
+                  <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-indigo-100 text-indigo-700" data-de="Antwort" data-en="Reply">Antwort</span>
+                </div>
+              </div>
+              <div class="flex gap-2 mt-3 flex-wrap">
+                <div class="flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-emerald-400"></div><span class="text-[9px] text-slate-500" data-de="Gesendet" data-en="Sent">Gesendet</span></div>
+                <div class="flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-amber-400"></div><span class="text-[9px] text-slate-500" data-de="Ausstehend" data-en="Pending">Ausstehend</span></div>
+                <div class="flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-indigo-400"></div><span class="text-[9px] text-slate-500" data-de="Antwort" data-en="Reply">Antwort</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+              <div class="flex items-center gap-1.5 shrink-0">
+                <div class="w-2 h-2 rounded-full bg-slate-300"></div>
+                <span class="text-[10px] font-semibold text-slate-400" data-de="Entwurf" data-en="Draft">Entwurf</span>
+              </div>
+            </div>
+            <!-- Disclaimer-Hinweis -->
+            <div class="flex items-start gap-2 mt-3 px-1 bg-amber-50 rounded-xl p-2.5 border border-amber-100">
+              <svg class="w-4 h-4 text-amber-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+              <span class="text-[10px] text-amber-700 leading-snug" data-de="Dieses Dokument ersetzt keine echte Rechtsberatung durch einen Anwalt." data-en="This document does not replace actual legal advice from a lawyer.">Dieses Dokument ersetzt keine echte Rechtsberatung durch einen Anwalt.</span>
+            </div>
+          </div>
+        </div>
+
+
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ APP SHOWCASE ══════════════════════════════════════════ -->
+  <section id="showcase" style="background:#070b14;" class="py-28 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-5">
+      <div class="text-center mb-12 reveal">
+        <div class="section-chip section-chip-dark mb-5" data-de="Live App-Ansicht" data-en="Live app view">Live App-Ansicht</div>
+        <h2 class="text-4xl md:text-5xl font-black text-white font-display tracking-tight mb-4" data-de="Die echte Oberfläche." data-en="The real interface.">Die echte Oberfläche.</h2>
+        <p class="text-white/45 text-lg max-w-xl mx-auto" data-de="Keine Marketing-Mockups – echte UI-Elemente aus der KitaRadar-Anwendung." data-en="No marketing mockups – real UI elements from the KitaRadar application.">Keine Marketing-Mockups – echte UI-Elemente aus der KitaRadar-Anwendung.</p>
+      </div>
+
+      <!-- Tab buttons -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-2 mb-6 justify-center reveal">
+        <button class="tab-btn active" data-tab="dashboard" data-de="Übersicht" data-en="Overview">Übersicht</button>
+        <button class="tab-btn" data-tab="requests" data-de="Meine Bewerbungen" data-en="My Applications">Meine Bewerbungen</button>
+        <button class="tab-btn" data-tab="calendar" data-de="Kita-Suche" data-en="Kita Search">Kita-Suche</button>
+        <button class="tab-btn" data-tab="admin" data-de="Einstellungen" data-en="Settings">Einstellungen</button>
+      </div>
+
+      <div class="reveal">
+        <!-- TAB: Dashboard -->
+        <div id="tab-dashboard" class="tab-panel active">
+          <div class="app-window">
+            <div class="app-window-bar">
+              <div class="win-dot win-dot-red"></div>
+              <div class="win-dot win-dot-yellow"></div>
+              <div class="win-dot win-dot-green"></div>
+              <div class="win-url">kitaradar.vercel.app/dashboard</div>
+            </div>
+            <div class="app-window-body">
+              <div class="app-sidebar">
+                <div class="sidebar-logo-row">
+                  <div class="sidebar-logo-icon">
+                    <svg class="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline stroke-linecap="round" stroke-linejoin="round" points="9 22 9 12 15 12 15 22"/></svg>
+                  </div>
+                  <span class="sidebar-logo-text">KR</span>
+                </div>
+                <div class="sidebar-nav-item active"><div class="nav-dot active"></div>Übersicht</div>
+                <div class="sidebar-nav-item"><div class="nav-dot"></div>Kita-Suche</div>
+                <div class="sidebar-nav-item"><div class="nav-dot"></div>Meine Bewerbungen</div>
+                <div class="sidebar-nav-item"><div class="nav-dot"></div>Einstellungen</div>
+                <div style="margin-top:auto; padding-top:8px; border-top:1px solid rgba(255,255,255,0.06);">
+                  <div class="sidebar-nav-item" style="font-size:10px;opacity:.6;"><div class="nav-dot"></div>Konto</div>
+                  <div class="sidebar-nav-item" style="font-size:10px;opacity:.6;"><div class="nav-dot"></div>Community</div>
+                  <div class="sidebar-nav-item" style="font-size:10px;opacity:.6;"><div class="nav-dot"></div>Einstellungen</div>
+                </div>
+              </div>
+              <div class="app-content">
+                <div class="content-title" data-de="Deine Kita-Übersicht 🏠" data-en="Your daycare overview 🏠">Deine Kita-Übersicht 🏠</div>
+                <div class="grid grid-cols-3 gap-3 mb-4">
+                  <div class="glass-card-dark rounded-xl p-3">
+                    <div style="font-size:9px;color:rgba(255,255,255,0.35);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;" data-de="Kitas gefunden" data-en="Daycare found">Kitas gefunden</div>
+                    <div style="font-size:22px;font-weight:800;color:#f59e0b;font-family:'Outfit',sans-serif;">12</div>
+                  </div>
+                  <div class="glass-card-dark rounded-xl p-3">
+                    <div style="font-size:9px;color:rgba(255,255,255,0.35);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;" data-de="Frei" data-en="Free spots">Frei</div>
+                    <div style="font-size:22px;font-weight:800;color:#10b981;font-family:'Outfit',sans-serif;">4</div>
+                  </div>
+                  <div class="glass-card-dark rounded-xl p-3">
+                    <div style="font-size:9px;color:rgba(255,255,255,0.35);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;" data-de="Beworben" data-en="Applied">Beworben</div>
+                    <div style="font-size:22px;font-weight:800;color:#818cf8;font-family:'Outfit',sans-serif;">2</div>
+                  </div>
+                </div>
+                <div style="font-size:11px;font-weight:700;color:#fff;margin-bottom:8px;" data-de="Empfohlene Kitas" data-en="Recommended daycare">Empfohlene Kitas</div>
+                <div class="space-y-2">
+                  <div class="glass-card-dark rounded-xl p-2.5 flex items-center gap-3">
+                    <div style="width:28px;height:28px;border-radius:50%;background:rgba(99,102,241,0.3);flex-shrink:0;"></div>
+                    <div style="flex:1;">
+                      <div style="font-size:11px;font-weight:600;color:#fff;" data-de="Kita Sonnenschein" data-en="Kita Sonnenschein">Kita Sonnenschein</div>
+                      <div style="font-size:9px;color:rgba(255,255,255,0.35);" data-de="0,4 km · Städtisch · 0–3 Jahre" data-en="0.4 km · Municipal · 0–3 years">0,4 km · Städtisch · 0–3 Jahre</div>
+                    </div>
+                    <span class="status-badge badge-approved" data-de="Frei" data-en="Free">Frei</span>
+                  </div>
+                  <div class="glass-card-dark rounded-xl p-2.5 flex items-center gap-3">
+                    <div style="width:28px;height:28px;border-radius:50%;background:rgba(245,158,11,0.3);flex-shrink:0;"></div>
+                    <div style="flex:1;">
+                      <div style="font-size:11px;font-weight:600;color:#fff;" data-de="Kita Regenbogen" data-en="Kita Regenbogen">Kita Regenbogen</div>
+                      <div style="font-size:9px;color:rgba(255,255,255,0.35);" data-de="1,2 km · Ev. Träger · 1–6 Jahre" data-en="1.2 km · Ev. provider · 1–6 years">1,2 km · Ev. Träger · 1–6 Jahre</div>
+                    </div>
+                    <span class="status-badge badge-pending" data-de="Warteliste" data-en="Waitlist">Warteliste</span>
+                  </div>
+                  <div class="glass-card-dark rounded-xl p-2.5 flex items-center gap-3">
+                    <div style="width:28px;height:28px;border-radius:50%;background:rgba(239,68,68,0.2);flex-shrink:0;"></div>
+                    <div style="flex:1;">
+                      <div style="font-size:11px;font-weight:600;color:#fff;" data-de="Kita Sterntaler" data-en="Kita Sterntaler">Kita Sterntaler</div>
+                      <div style="font-size:9px;color:rgba(255,255,255,0.35);" data-de="1,8 km · AWO · Montessori" data-en="1.8 km · AWO · Montessori">1,8 km · AWO · Montessori</div>
+                    </div>
+                    <span class="status-badge badge-approved" data-de="Frei" data-en="Free">Frei</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: Meine Bewerbungen -->
+        <div id="tab-requests" class="tab-panel">
+          <div class="app-window">
+            <div class="app-window-bar">
+              <div class="win-dot win-dot-red"></div><div class="win-dot win-dot-yellow"></div><div class="win-dot win-dot-green"></div>
+              <div class="win-url">kitaradar.vercel.app/applications</div>
+            </div>
+            <div class="app-window-body">
+              <div class="app-sidebar">
+                <div class="sidebar-logo-row">
+                  <div class="sidebar-logo-icon"><svg class="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline stroke-linecap="round" stroke-linejoin="round" points="9 22 9 12 15 12 15 22"/></svg></div>
+                  <span class="sidebar-logo-text">KR</span>
+                </div>
+                <div class="sidebar-nav-item"><div class="nav-dot"></div>Übersicht</div>
+                <div class="sidebar-nav-item"><div class="nav-dot"></div>Kita-Suche</div>
+                <div class="sidebar-nav-item active"><div class="nav-dot active"></div>Meine Bewerbungen</div>
+                <div class="sidebar-nav-item"><div class="nav-dot"></div>Einstellungen</div>
+              </div>
+              <div class="app-content">
+                <div class="content-title" data-de="Meine Bewerbungen" data-en="My Applications">Meine Bewerbungen</div>
+                <!-- Filter tabs -->
+                <div class="flex gap-2 mb-4">
+                  <div style="padding:4px 10px;border-radius:20px;background:#6366f1;color:#fff;font-size:10px;font-weight:700;" data-de="Alle" data-en="All">Alle</div>
+                  <div style="padding:4px 10px;border-radius:20px;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.4);font-size:10px;font-weight:600;" data-de="Gesendet" data-en="Sent">Gesendet</div>
+                  <div style="padding:4px 10px;border-radius:20px;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.4);font-size:10px;font-weight:600;" data-de="Ausstehend" data-en="Pending">Ausstehend</div>
+                  <div style="padding:4px 10px;border-radius:20px;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.4);font-size:10px;font-weight:600;" data-de="Antwort" data-en="Reply">Antwort</div>
+                </div>
+                <div class="space-y-2">
+                  <div class="glass-card-dark rounded-xl p-3 flex items-center gap-3">
+                    <div style="flex:1;"><div style="font-size:11px;font-weight:600;color:#fff;margin-bottom:2px;" data-de="Kita Sonnenschein" data-en="Kita Sonnenschein">Kita Sonnenschein</div><div style="font-size:9px;color:rgba(255,255,255,0.35);" data-de="KI-Bewerbung · kita-sonnenschein@example.de" data-en="AI application · kita-sonnenschein@example.de">KI-Bewerbung · kita-sonnenschein@example.de</div></div>
+                    <span class="status-badge badge-approved">✓ Gesendet</span>
+                  </div>
+                  <div class="glass-card-dark rounded-xl p-3 flex items-center gap-3">
+                    <div style="flex:1;"><div style="font-size:11px;font-weight:600;color:#fff;margin-bottom:2px;" data-de="Kita Regenbogen" data-en="Kita Regenbogen">Kita Regenbogen</div><div style="font-size:9px;color:rgba(255,255,255,0.35);" data-de="KI-Bewerbung · Antwort erhalten" data-en="AI application · Reply received">KI-Bewerbung · Antwort erhalten</div></div>
+                    <span class="status-badge badge-pending">⏳ Ausstehend</span>
+                  </div>
+                  <div class="glass-card-dark rounded-xl p-3 flex items-center gap-3">
+                    <div style="flex:1;"><div style="font-size:11px;font-weight:600;color:#fff;margin-bottom:2px;" data-de="Kita Sterntaler" data-en="Kita Sterntaler">Kita Sterntaler</div><div style="font-size:9px;color:rgba(255,255,255,0.35);" data-de="KI-Bewerbung · Entwurf erstellt" data-en="AI application · Draft created">KI-Bewerbung · Entwurf erstellt</div></div>
+                    <span class="status-badge badge-approved">✓ Entwurf</span>
+                  </div>
+                  <div class="glass-card-dark rounded-xl p-3 flex items-center gap-3">
+                    <div style="flex:1;"><div style="font-size:11px;font-weight:600;color:#fff;margin-bottom:2px;" data-de="Kita Zauberwald" data-en="Kita Zauberwald">Kita Zauberwald</div><div style="font-size:9px;color:rgba(255,255,255,0.35);" data-de="KI-Bewerbung · gesendet" data-en="AI application · sent">KI-Bewerbung · gesendet</div></div>
+                    <span class="status-badge badge-approved">✓ Gesendet</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: Kita-Suche -->
+        <div id="tab-calendar" class="tab-panel">
+          <div class="app-window">
+            <div class="app-window-bar">
+              <div class="win-dot win-dot-red"></div><div class="win-dot win-dot-yellow"></div><div class="win-dot win-dot-green"></div>
+              <div class="win-url">kitaradar.vercel.app/search</div>
+            </div>
+            <div class="app-window-body">
+              <div class="app-sidebar">
+                <div class="sidebar-logo-row">
+                  <div class="sidebar-logo-icon"><svg class="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline stroke-linecap="round" stroke-linejoin="round" points="9 22 9 12 15 12 15 22"/></svg></div>
+                  <span class="sidebar-logo-text">KR</span>
+                </div>
+                <div class="sidebar-nav-item"><div class="nav-dot"></div>Übersicht</div>
+                <div class="sidebar-nav-item active"><div class="nav-dot active"></div>Kita-Suche</div>
+                <div class="sidebar-nav-item"><div class="nav-dot"></div>Meine Bewerbungen</div>
+                <div class="sidebar-nav-item"><div class="nav-dot"></div>Einstellungen</div>
+              </div>
+              <div class="app-content">
+                <div class="flex items-center justify-between mb-3">
+                  <div class="content-title mb-0" data-de="Kita-Suche · Umkreis 2 km" data-en="Daycare search · 2 km radius">Kita-Suche · Umkreis 2 km</div>
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <div class="flex items-center gap-1.5 text-[10px] text-white/50"><div class="w-2.5 h-2.5 rounded-full bg-indigo-500"></div><span data-de="Frei" data-en="Free">Frei</span></div>
+                    <div class="flex items-center gap-1.5 text-[10px] text-white/50"><div class="w-2.5 h-2.5 rounded-full bg-amber-500"></div><span data-de="Warteliste" data-en="Waitlist">Warteliste</span></div>
+                  </div>
+                </div>
+                <div class="space-y-2">
+                  <div class="glass-card-dark rounded-xl p-2.5 flex items-center gap-3">
+                    <div style="width:28px;height:28px;border-radius:50%;background:rgba(16,185,129,0.3);flex-shrink:0;"></div>
+                    <div style="flex:1;"><div style="font-size:11px;font-weight:600;color:#fff;">Kita Sonnenschein</div><div style="font-size:9px;color:rgba(255,255,255,0.35);">0,4 km · Städtisch · 0–3 J.</div></div>
+                    <span class="status-badge badge-approved" data-de="Frei" data-en="Free">Frei</span>
+                  </div>
+                  <div class="glass-card-dark rounded-xl p-2.5 flex items-center gap-3">
+                    <div style="width:28px;height:28px;border-radius:50%;background:rgba(245,158,11,0.3);flex-shrink:0;"></div>
+                    <div style="flex:1;"><div style="font-size:11px;font-weight:600;color:#fff;">Kita Regenbogen</div><div style="font-size:9px;color:rgba(255,255,255,0.35);">1,2 km · Ev. Träger · 1–6 J.</div></div>
+                    <span class="status-badge badge-pending" data-de="Warteliste" data-en="Waitlist">Warteliste</span>
+                  </div>
+                  <div class="glass-card-dark rounded-xl p-2.5 flex items-center gap-3">
+                    <div style="width:28px;height:28px;border-radius:50%;background:rgba(99,102,241,0.3);flex-shrink:0;"></div>
+                    <div style="flex:1;"><div style="font-size:11px;font-weight:600;color:#fff;">Kita Sterntaler</div><div style="font-size:9px;color:rgba(255,255,255,0.35);">1,8 km · AWO · Montessori</div></div>
+                    <span class="status-badge badge-approved" data-de="Frei" data-en="Free">Frei</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: Admin -->
+        <div id="tab-admin" class="tab-panel">
+          <div class="app-window">
+            <div class="app-window-bar">
+              <div class="win-dot win-dot-red"></div><div class="win-dot win-dot-yellow"></div><div class="win-dot win-dot-green"></div>
+              <div class="win-url">kitaradar.vercel.app/settings</div>
+            </div>
+            <div class="app-window-body">
+              <div class="app-sidebar">
+                <div class="sidebar-logo-row">
+                  <div class="sidebar-logo-icon"><svg class="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline stroke-linecap="round" stroke-linejoin="round" points="9 22 9 12 15 12 15 22"/></svg></div>
+                  <span class="sidebar-logo-text">KR</span>
+                </div>
+                <div class="sidebar-nav-item"><div class="nav-dot"></div>Übersicht</div>
+                <div class="sidebar-nav-item"><div class="nav-dot"></div>Kita-Suche</div>
+                <div class="sidebar-nav-item"><div class="nav-dot"></div>Meine Bewerbungen</div>
+                <div class="sidebar-nav-item"><div class="nav-dot"></div>Einstellungen</div>
+                <div class="sidebar-nav-item active" style="color:#f59e0b;background:rgba(245,158,11,0.1);"><div class="nav-dot" style="background:#f59e0b;"></div>Konto</div>
+                <div class="sidebar-nav-item"><div class="nav-dot"></div>Community</div>
+              </div>
+              <div class="app-content">
+                <div class="content-title" data-de="Konto &amp; Einstellungen" data-en="Account &amp; Settings">Konto &amp; Einstellungen</div>
+                <div class="flex items-center gap-2 mb-3 flex-wrap">
+                  <div style="padding:3px 10px;border-radius:20px;background:rgba(245,158,11,0.15);color:#f59e0b;font-size:9px;font-weight:700;border:1px solid rgba(245,158,11,0.2);" data-de="2 laufende Bewerbungen" data-en="2 active applications">2 laufende Bewerbungen</div>
+                  <div style="padding:3px 10px;border-radius:20px;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.4);font-size:9px;font-weight:600;" data-de="+ Neue Suche" data-en="+ New search">+ Neue Suche</div>
+                </div>
+                <!-- User table -->
+                <div style="font-size:9px;color:rgba(255,255,255,0.3);font-weight:600;display:grid;grid-template-columns:1fr 1fr auto;gap:8px;padding:6px 8px;text-transform:uppercase;letter-spacing:.05em;">
+                  <div data-de="Nutzer" data-en="User">Nutzer</div><div data-de="Status" data-en="Status">Status</div><div data-de="Plan" data-en="Plan">Plan</div>
+                </div>
+                <div class="space-y-1.5">
+                  <div class="glass-card-dark rounded-lg p-2 flex items-center gap-3" style="display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:center;">
+                    <div style="font-size:11px;color:#fff;font-weight:600;">Max Müller</div>
+                    <span class="status-badge badge-pending" style="font-size:8px;" data-de="Ausstehend" data-en="Pending">Ausstehend</span>
+                    <span style="font-size:8px;padding:1px 7px;border-radius:8px;background:rgba(245,158,11,0.15);color:#f59e0b;font-weight:700;">Pro</span>
+                  </div>
+                  <div class="glass-card-dark rounded-lg p-2" style="display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:center;">
+                    <div style="font-size:11px;color:#fff;font-weight:600;">Anna Schmidt</div>
+                    <span class="status-badge badge-approved" style="font-size:8px;" data-de="Gesendet" data-en="Sent">Gesendet</span>
+                    <span style="font-size:8px;padding:1px 7px;border-radius:8px;background:rgba(99,102,241,0.15);color:#818cf8;font-weight:700;">Free</span>
+                  </div>
+                  <div class="glass-card-dark rounded-lg p-2" style="display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:center;">
+                    <div style="font-size:11px;color:#fff;font-weight:600;">Lars Becker</div>
+                    <span class="status-badge badge-pending" style="font-size:8px;" data-de="Ausstehend" data-en="Pending">Ausstehend</span>
+                    <span style="font-size:8px;padding:1px 7px;border-radius:8px;background:rgba(99,102,241,0.15);color:#818cf8;font-weight:700;">Free</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ ZUSATZFUNKTIONEN ═══════════════════════════════════════ -->
+  <section id="extras" class="py-28 bg-white">
+    <div class="max-w-7xl mx-auto px-5">
+      <div class="text-center mb-14 reveal">
+        <div class="section-chip mb-5" data-de="Weitere Funktionen" data-en="More features">Weitere Funktionen</div>
+        <h2 class="text-4xl font-black text-slate-900 font-display tracking-tight mb-4" data-de="Alles, was Sie brauchen." data-en="Everything you need.">Alles, was Sie brauchen.</h2>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div class="glass-card rounded-2xl p-6 reveal">
+          <div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center mb-4"><svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
+          <h3 class="font-bold text-slate-900 mb-2" data-de="Kartensuche mit Umkreis" data-en="Map search with radius">Kartensuche mit Umkreis</h3>
+          <p class="text-slate-500 text-sm" data-de="Alle Kitas in deinem Umkreis auf der Karte sehen – freie Plätze farblich markiert. Direkter Zugriff auf Kontaktdaten, Öffnungszeiten und Träger." data-en="See all daycare centres in your area on the map – free spots highlighted in colour. Direct access to contact details, opening hours and provider.">Alle Kitas im Umkreis auf der Karte sehen – freie Plätze farblich markiert. Kontaktdaten und Öffnungszeiten direkt abrufbar.</p>
+        </div>
+        <div class="glass-card rounded-2xl p-6 reveal">
+          <div class="w-10 h-10 rounded-xl bg-violet-50 flex items-center justify-center mb-4"><svg class="w-5 h-5 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/></svg></div>
+          <div class="flex items-center gap-2 mb-2">
+            <h3 class="font-bold text-slate-900" data-de="Erweiterte Filter" data-en="Advanced filters">Erweiterte Filter</h3>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-600" data-de="Pro" data-en="Pro">Pro</span>
+          </div>
+          <p class="text-slate-500 text-sm" data-de="Filtere nach Träger (städtisch, ev., AWO, privat), Alter, Öffnungszeiten und pädagogischem Konzept – für präzise, passende Treffer." data-en="Filter by provider (municipal, ev., AWO, private), age, opening hours and pedagogical concept – for precise, relevant results.">Filter nach Träger, Alter, Öffnungszeiten und pädagogischem Konzept für präzise Treffer.</p>
+        </div>
+        <div class="glass-card rounded-2xl p-6 reveal">
+          <div class="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center mb-4"><svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg></div>
+          <h3 class="font-bold text-slate-900 mb-2" data-de="mailto-Direktversand" data-en="Direct mailto send">mailto-Direktversand</h3>
+          <p class="text-slate-500 text-sm" data-de="Der KI-generierte Bewerbungsbrief öffnet das lokale E-Mail-Programm mit vorausgefülltem Betreff, Empfänger und Text – kein Kopieren nötig." data-en="The AI-generated application letter opens the local email programme with pre-filled subject, recipient and body – no copying needed.">KI-Brief öffnet das E-Mail-Programm mit vorausgefülltem Betreff, Empfänger und Text – kein Kopieren nötig.</p>
+        </div>
+        <div class="glass-card rounded-2xl p-6 reveal">
+          <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center mb-4"><svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
+          <h3 class="font-bold text-slate-900 mb-2" data-de="Community-Feed" data-en="Community feed">Community-Feed</h3>
+          <p class="text-slate-500 text-sm" data-de="Eltern teilen Erfahrungen über Kita-Reaktionszeiten, Wartelisten und Aufnahmen – so weißt du, welche Kitas wirklich antworten und Plätze vergeben." data-en="Parents share experiences about daycare response times, waiting lists and admissions – so you know which centres actually respond and grant places.">Eltern teilen Erfahrungen über Reaktionszeiten und Wartelisten – immer aktuelle Insider-Infos.</p>
+        </div>
+        <div class="glass-card rounded-2xl p-6 reveal">
+          <div class="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center mb-4"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg></div>
+          <h3 class="font-bold text-slate-900 mb-2" data-de="DSGVO &amp; Datensicherheit" data-en="GDPR &amp; data security">DSGVO &amp; Datensicherheit</h3>
+          <p class="text-slate-500 text-sm" data-de="Authentifizierung via Supabase, rollenbasierter Zugriff (RLS), Datenspeicherung ausschließlich auf EU-Servern. Keine Weitergabe an Dritte." data-en="Authentication via Supabase, role-based access control (RLS), data storage exclusively on EU servers. No sharing with third parties.">Authentifizierung via Supabase, RLS, EU-Datenspeicherung. Keine Weitergabe an Dritte.</p>
+        </div>
+        <div class="glass-card rounded-2xl p-6 reveal">
+          <div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center mb-4"><svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm0 8a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zm12 0a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/></svg></div>
+          <h3 class="font-bold text-slate-900 mb-2" data-de="WAMOCON-Produktfamilie" data-en="WAMOCON product family">WAMOCON-Produktfamilie</h3>
+          <p class="text-slate-500 text-sm" data-de="KitaRadar ist Teil der WAMOCON-Produktfamilie. Als Micro-Frontend in TeamRadar einbettbar – für Unternehmen mit mehreren WAMOCON-Apps." data-en="KitaRadar is part of the WAMOCON product family. Embeddable as a micro-frontend in TeamRadar – for companies with multiple WAMOCON apps.">KitaRadar ist Teil der WAMOCON-Produktfamilie – als Micro-Frontend in TeamRadar einbettbar.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ ROI RECHNER ═══════════════════════════════════════════ -->
+  <section id="roi" style="background:#070b14;" class="py-28 relative overflow-hidden">
+    <div class="orb w-96 h-96 bg-indigo-700/20 top-0 right-0"></div>
+    <div class="max-w-7xl mx-auto px-5">
+      <div class="text-center mb-16 reveal">
+        <div class="section-chip section-chip-dark mb-5" data-de="Zeit-Rechner" data-en="Time Calculator">Zeit-Rechner</div>
+        <h2 class="text-4xl md:text-5xl font-black text-white font-display tracking-tight mb-4" data-de="Wie viel Zeit sparen Sie bei der Kita-Suche?" data-en="How much time do you save searching for daycare?">Wie viel Zeit sparen Sie bei der Kita-Suche?</h2>
+        <p class="text-white/45 text-lg max-w-xl mx-auto" data-de="Schätzung auf Basis realer Elternerfahrungen und Marktdaten (BMFSFJ 2024, Bertelsmann 2024). Kein Marketingversprechen." data-en="Estimate based on real parent experiences and market data (BMFSFJ 2024, Bertelsmann 2024). No marketing promises.">Schätzung auf Basis realer Elternerfahrungen und Marktdaten (BMFSFJ 2024, Bertelsmann 2024). Kein Marketingversprechen.</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <!-- Sliders -->
+        <div class="reveal">
+          <div class="space-y-10">
+            <div>
+              <div class="flex justify-between items-center mb-3">
+                <label class="text-sm font-bold uppercase tracking-widest text-indigo-400" data-de="Anzahl der Kitas, bei denen Sie sich bewerben" data-en="Number of daycare centres you apply to">Anzahl der Kitas, bei denen Sie sich bewerben</label>
+                <span id="employee-count-label" class="text-2xl font-black text-white font-display">5</span>
+              </div>
+              <input type="range" id="employee-slider" min="1" max="20" value="5">
+            </div>
+            <div>
+              <div class="flex justify-between items-center mb-3">
+                <label class="text-sm font-bold uppercase tracking-widest text-indigo-400" data-de="Minuten manuell pro Kita" data-en="Minutes manually per Kita">Minuten manuell pro Kita</label>
+                <span id="request-count-label" class="text-2xl font-black text-white font-display">60</span>
+              </div>
+              <input type="range" id="request-slider" min="15" max="120" value="60" step="5">
+            </div>
+          </div>
+          <!-- Disclaimer -->
+          <div class="mt-8 flex gap-3 p-4 rounded-2xl bg-white/4 border border-white/8">
+            <svg class="w-5 h-5 text-indigo-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <p class="text-white/35 text-xs leading-relaxed" data-de="Schätzung: 30 Min. KI-Suche + 5 Min. Bewerbungsbrief pro Kita mit KitaRadar vs. ~2–3 Std. manuelle Recherche + individuelles Anschreiben. Eigene Werte können abweichen." data-en="Estimate: 30 min AI search + 5 min application letter per daycare with KitaRadar vs. ~2–3 hours manual research + individual letter. Your actual values may differ.">Schätzung: 30 Min. KI-Suche + 5 Min. Bewerbungsbrief pro Kita mit KitaRadar vs. ~2–3 Std. manuell. Eigene Werte können abweichen.</p>
+          </div>
+        </div>
+        <!-- Result -->
+        <div class="relative reveal">
+          <div class="absolute inset-0 bg-indigo-600/15 blur-3xl rounded-full"></div>
+          <div class="glass-card-dark border border-white/10 p-10 rounded-3xl text-center relative">
+            <div class="text-indigo-400 text-xs font-bold uppercase tracking-widest mb-4" data-de="Geschätzte Zeitersparnis" data-en="Estimated time saved">Geschätzte Zeitersparnis</div>
+            <div id="savings-value" class="text-6xl font-black text-white mb-3 font-display transition-transform">275 Min.</div>
+            <div class="text-white/40 mb-8 text-sm">≈ <span id="hours-value" class="text-white font-bold">4,6 Std.</span> <span data-de="zurückgewonnene Zeit" data-en="time saved">zurückgewonnene Zeit</span></div>
+            <a href="https://kitaradar.vercel.app/" target="_blank" rel="noopener" class="block w-full bg-indigo-600 hover:bg-indigo-500 text-white py-4 rounded-2xl font-bold transition-all shadow-lg shadow-indigo-900/40" data-de="Jetzt Kita suchen" data-en="Find daycare now">Jetzt Kita suchen</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PRICING ════════════════════════════════════════════════ -->
+  <section id="pricing" class="py-28 bg-slate-50">
+    <div class="max-w-7xl mx-auto px-5">
+      <div class="text-center mb-16 reveal">
+        <div class="section-chip mb-5" data-de="Preise" data-en="Pricing">Preise</div>
+        <h2 class="text-4xl md:text-5xl font-black text-slate-900 font-display tracking-tight mb-4" data-de="Einfach. Transparent. Skalierbar." data-en="Simple. Transparent. Scalable.">Einfach. Transparent. Skalierbar.</h2>
+        <p class="text-slate-500 text-lg max-w-xl mx-auto" data-de="Keine versteckten Kosten. Jederzeit kündbar." data-en="No hidden costs. Cancel at any time.">Keine versteckten Kosten. Jederzeit kündbar.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+
+        <!-- FREE -->
+        <div class="pricing-card reveal">
+          <div class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3" data-de="KOSTENLOS" data-en="FREE">KOSTENLOS</div>
+          <div class="flex items-end gap-1 mb-1">
+            <div class="text-4xl font-black text-slate-900 font-display">0 €</div>
+          </div>
+          <div class="text-slate-400 text-sm mb-6" data-de="10 Suchen/Monat · keine Kreditkarte" data-en="10 searches/month · no credit card">10 Suchen/Monat · keine Kreditkarte</div>
+          <a href="https://kitaradar.vercel.app/" target="_blank" rel="noopener" class="block w-full text-center border border-slate-200 hover:border-indigo-400 text-slate-700 hover:text-indigo-600 py-3 rounded-xl font-semibold text-sm transition-all mb-6" data-de="Kostenlos starten" data-en="Start free">Kostenlos starten</a>
+          <div class="space-y-1">
+            <div class="pf-row"><svg class="check-ico w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg><span data-de="10 Kita-Suchen pro Monat" data-en="10 daycare searches per month">10 Kita-Suchen pro Monat</span></div>
+            <div class="pf-row"><svg class="check-ico w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg><span data-de="Kartenansicht mit Umkreisfilter" data-en="Map view with radius filter">Kartenansicht mit Umkreisfilter</span></div>
+            <div class="pf-row"><svg class="check-ico w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg><span data-de="Kita-Kontaktdaten & Öffnungszeiten" data-en="Daycare contact details & opening hours">Kita-Kontaktdaten &amp; Öffnungszeiten</span></div>
+            <div class="pf-row"><svg class="check-ico w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg><span data-de="Community-Feed (lesen)" data-en="Community feed (read)">Community-Feed (lesen)</span></div>
+            <div class="pf-row"><svg class="cross-ico w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg><span class="text-slate-400" data-de="KI-Suchassistent" data-en="AI search assistant">KI-Suchassistent</span></div>
+            <div class="pf-row"><svg class="cross-ico w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg><span class="text-slate-400" data-de="KI-Bewerbungsgenerator" data-en="AI application generator">KI-Bewerbungsgenerator</span></div>
+            <div class="pf-row"><svg class="cross-ico w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg><span class="text-slate-400" data-de="Unbegrenzte Suchen" data-en="Unlimited searches">Unbegrenzte Suchen</span></div>
+          </div>
+        </div>
+
+        <!-- Pro (featured) -->
+        <div class="pricing-card featured reveal">
+          <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg" data-de="Empfohlen" data-en="Recommended">Empfohlen</div>
+          <div class="text-xs font-bold uppercase tracking-widest text-indigo-600 mb-3">PRO</div>
+          <div class="flex items-end gap-1 mb-1">
+            <div class="text-4xl font-black text-slate-900 font-display">7,99 €</div>
+            <div class="text-slate-400 text-sm mb-1.5" data-de="/ Monat · jederzeit kündbar" data-en="/ month · cancel anytime">/ Monat · jederzeit kündbar</div>
+          </div>
+          <div class="text-slate-400 text-sm mb-6" data-de="Unbegrenzte Suchen &amp; KI-Funktionen" data-en="Unlimited searches &amp; AI features">Unbegrenzte Suchen &amp; KI-Funktionen</div>
+          <a href="https://kitaradar.vercel.app/" target="_blank" rel="noopener" class="block w-full text-center bg-indigo-600 hover:bg-indigo-500 text-white py-3 rounded-xl font-semibold text-sm transition-all mb-6 shadow-lg shadow-indigo-100" data-de="Pro starten – 7,99 €/Monat" data-en="Start Pro – €7.99/month">Pro starten – 7,99 €/Monat</a>
+          <div class="space-y-1">
+            <div class="pf-row"><svg class="check-ico w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg><span data-de="Alles aus Free" data-en="Everything in Free">Alles aus Free</span></div>
+            <div class="pf-row"><svg class="check-ico w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg><span data-de="Unbegrenzte Kita-Suchen" data-en="Unlimited daycare searches">Unbegrenzte Kita-Suchen</span></div>
+            <div class="pf-row"><svg class="check-ico w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg><span data-de="KI-Suchassistent (Chat)" data-en="AI search assistant (chat)">KI-Suchassistent (Chat)</span></div>
+            <div class="pf-row"><svg class="check-ico w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg><span data-de="KI-Bewerbungsgenerator (mailto)" data-en="AI application generator (mailto)">KI-Bewerbungsgenerator (mailto)</span></div>
+            <div class="pf-row"><svg class="check-ico w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg><span data-de="Bewerbungs-Tracking" data-en="Application tracking">Bewerbungs-Tracking</span></div>
+            <div class="pf-row"><svg class="check-ico w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg><span data-de="Community-Feed (lesen &amp; schreiben)" data-en="Community feed (read &amp; write)">Community-Feed (lesen &amp; schreiben)</span></div>
+            <div class="pf-row"><svg class="check-ico w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg><span data-de="Prioritäts-Support" data-en="Priority support">Prioritäts-Support</span></div>
+          </div>
+        </div>
+
+        <!-- Enterprise -->
+        <div class="innovation-card reveal">
+          <div class="relative z-10">
+            <div class="text-xs font-bold uppercase tracking-widest text-indigo-400 mb-3">ENTERPRISE</div>
+            <div class="text-3xl font-black text-white font-display mb-1" data-de="Auf Anfrage" data-en="On request">Auf Anfrage</div>
+            <div class="text-white/40 text-sm mb-6" data-de="KitaRadar Pro + individuelle Integration" data-en="KitaRadar Pro + custom integration">KitaRadar Pro + individuelle Integration</div>
+            <a href="#" onclick="openContactModal();return false;" class="block w-full text-center border border-indigo-500/50 hover:border-indigo-400 text-indigo-300 hover:text-white py-3 rounded-xl font-semibold text-sm transition-all mb-6" data-de="Anfragen" data-en="Contact us">Anfragen</a>
+            <div class="space-y-1">
+              <div class="pf-row" style="border-color:rgba(255,255,255,0.05);color:rgba(255,255,255,0.65);">
+                <svg class="check-ico w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                <span data-de="Alles aus Pro" data-en="Everything in Pro">Alles aus Pro</span>
+              </div>
+              <div class="pf-row" style="border-color:rgba(255,255,255,0.05);color:rgba(255,255,255,0.65);">
+                <svg class="check-ico w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                <span data-de="Eigene Kita-Datenbank-Integration" data-en="Custom daycare database integration">Eigene Kita-Datenbank-Integration</span>
+              </div>
+              <div class="pf-row" style="border-color:rgba(255,255,255,0.05);color:rgba(255,255,255,0.65);">
+                <svg class="check-ico w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                <span data-de="Whitelabel &amp; API-Zugang" data-en="Whitelabel &amp; API access">Whitelabel &amp; API-Zugang</span>
+              </div>
+              <div class="pf-row" style="border-color:rgba(255,255,255,0.05);color:rgba(255,255,255,0.65);">
+                <svg class="check-ico w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                <span data-de="Dedizierter Account-Manager" data-en="Dedicated account manager">Dedizierter Account-Manager</span>
+              </div>
+              <div class="pf-row" style="border-color:rgba(255,255,255,0.05);color:rgba(255,255,255,0.65);">
+                <svg class="check-ico w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                <span data-de="SLA &amp; DSGVO-Auftragsverarbeitung" data-en="SLA &amp; GDPR data processing agreement">SLA &amp; DSGVO-Auftragsverarbeitung</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Pflichthinweis unter Pricing -->
+      <div class="max-w-3xl mx-auto mt-6 px-4 py-4 rounded-2xl bg-amber-50 border border-amber-100 flex gap-3">
+        <svg class="w-5 h-5 text-amber-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+        <p class="text-xs text-amber-700 leading-relaxed" data-de="Hinweis: KitaRadar ist ein Suchwerkzeug und ersetzt keine offizielle Kita-Platzvermittlung durch das Jugendamt. Kita-Verfügbarkeiten werden auf Basis öffentlicher Daten ermittelt und können variieren. KI-generierte Bewerbungsschreiben sind Vorlagen – bitte vor dem Versand prüfen." data-en="Note: KitaRadar is a search tool and does not replace official daycare placement services provided by local youth welfare offices. Daycare availability is based on public data and may vary. AI-generated application letters are templates — please review before sending.">Hinweis: KitaRadar ist ein Suchwerkzeug und ersetzt keine offizielle Kita-Platzvermittlung. Verfügbarkeitsangaben basieren auf öffentlichen Daten. KI-generierte Bewerbungsschreiben sind Vorlagen – bitte vor dem Versand prüfen.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FAQ ════════════════════════════════════════════════════ -->
+  <section id="faq" class="py-28 bg-white">
+    <div class="max-w-3xl mx-auto px-5">
+      <div class="text-center mb-12 reveal">
+        <div class="section-chip mb-5" data-de="FAQ" data-en="FAQ">FAQ</div>
+        <h2 class="text-4xl font-black text-slate-900 font-display tracking-tight" data-de="Häufige Fragen." data-en="Frequently asked questions.">Häufige Fragen.</h2>
+      </div>
+      <div class="space-y-3 reveal">
+
+        <div class="faq-item">
+          <button class="faq-question" data-de="Was ist KitaRadar?" data-en="What is KitaRadar?">Was ist KitaRadar?
+            <svg class="faq-chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="faq-answer" data-de="KitaRadar ist eine KI-gestützte Web-App, die Eltern hilft, freie Kita-Plätze in ihrer Nähe zu finden und sich mit einem automatisch generierten Bewerbungsschreiben direkt per E-Mail zu bewerben. Entwickelt von WAMOCON GmbH." data-en="KitaRadar is an AI-powered web app that helps parents find available daycare spots near them and apply directly by email with an auto-generated application letter. Developed by WAMOCON GmbH.">KitaRadar ist eine KI-gestützte Web-App, die Eltern hilft, freie Kita-Plätze in ihrer Nähe zu finden und sich mit einem automatisch generierten Bewerbungsschreiben direkt per E-Mail zu bewerben.</div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" data-de="Wie viel kostet KitaRadar?" data-en="How much does KitaRadar cost?">Wie viel kostet KitaRadar?
+            <svg class="faq-chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="faq-answer" data-de="Free (0 €): 10 Kita-Suchen pro Monat, Kartenansicht, keine KI-Funktionen. Pro (7,99 €/Monat): unbegrenzte Suchen, KI-Suchassistent, KI-Bewerbungsgenerator, Bewerbungs-Tracking, Community-Feed. Pro ist monatlich kündbar – keine Mindestlaufzeit." data-en="Free (€0): 10 daycare searches per month, map view, no AI features. Pro (€7.99/month): unlimited searches, AI search assistant, AI application generator, application tracking, community feed. Pro can be cancelled monthly – no minimum term.">Free (0 €): 10 Suchen/Monat, keine KI. Pro (7,99 €/Monat): unbegrenzt, KI-Suche + KI-Bewerbung, Tracking, Community. Monatlich kündbar.</div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" data-de="Wie funktioniert die KI-Suche?" data-en="How does the AI search work?">Wie funktioniert die KI-Suche?
+            <svg class="faq-chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="faq-answer" data-de="Sie geben Ihren Standort, den gewünschten Betreuungsumfang und das früheste Aufnahmedatum ein. Unsere KI sucht passende Kitas im Umkreis, filtert nach Verfügbarkeit und zeigt Treffer auf der Karte an. Im Chat-Assistenten können Sie gezielt nachfragen." data-en="You enter your location, preferred care hours, and earliest start date. Our AI searches matching daycare centres nearby, filters by availability, and displays results on the map. You can ask follow-up questions in the chat assistant.">Standort eingeben → KI filtert Kitas nach Umkreis, Betreuungsumfang und Verfügbarkeit → Ergebnisse auf der Karte. KI-Chat für gezielte Fragen.</div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" data-de="Wie wird der Bewerbungsbrief versendet?" data-en="How is the application letter sent?">Wie wird der Bewerbungsbrief versendet?
+            <svg class="faq-chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="faq-answer" data-de="KitaRadar generiert per KI ein individuelles Bewerbungsschreiben und öffnet automatisch Ihre E-Mail-App (mailto-Link) mit vorausgefülltem Empfänger, Betreff und Text. Sie versenden direkt aus Ihrem Postfach – vollständige Kontrolle, keine Drittserver." data-en="KitaRadar AI-generates an individual application letter and automatically opens your email app (mailto link) with pre-filled recipient, subject and body. You send directly from your own inbox – full control, no third-party servers.">KI-Bewerbungsschreiben wird generiert und per mailto-Link direkt in Ihrer E-Mail-App geöffnet. Sie versenden aus Ihrem eigenen Postfach – keine Drittserver.</div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" data-de="Sind meine Daten sicher?" data-en="Is my data secure?">Sind meine Daten sicher?
+            <svg class="faq-chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="faq-answer" data-de="Ja. Alle Daten werden auf europäischen Servern (Supabase EU) gespeichert. Die Verarbeitung ist DSGVO-konform. KitaRadar liest keine E-Mail-Daten aus und hat keinen Zugriff auf Ihr Postfach. WAMOCON GmbH unterliegt deutschen Datenschutzgesetzen (BDSG)." data-en="Yes. All data is stored on European servers (Supabase EU). Processing is GDPR-compliant. KitaRadar does not read your email data and has no access to your inbox. WAMOCON GmbH is subject to German data protection law (BDSG).">Alle Daten auf EU-Servern (Supabase EU). DSGVO-konform. Keine E-Mail-Daten werden ausgelesen. WAMOCON GmbH unterliegt deutschem BDSG.</div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" data-de="Was ist der Unterschied zwischen Free und Pro?" data-en="What's the difference between Free and Pro?">Was ist der Unterschied zwischen Free und Pro?
+            <svg class="faq-chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="faq-answer" data-de="Free: 10 Suchen/Monat, Karte, Kita-Kontaktdaten, Community lesen – ohne KI-Funktionen. Pro: unbegrenzte Suchen, KI-Chat-Assistent, KI-Bewerbungsgenerator (mailto), Bewerbungs-Tracking, Community aktiv nutzen, Prioritäts-Support. Monatlich kündbar." data-en="Free: 10 searches/month, map, daycare contact details, read community – no AI features. Pro: unlimited searches, AI chat assistant, AI application generator (mailto), application tracking, active community participation, priority support. Cancel monthly.">Free: 10 Suchen/Monat, Karte, keine KI. Pro: unbegrenzte Suchen + KI-Chat + KI-Bewerbung + Tracking + Community. 7,99 €/Monat, monatlich kündbar.</div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" data-de="Für welche Städte ist KitaRadar verfügbar?" data-en="Which cities does KitaRadar cover?">Für welche Städte ist KitaRadar verfügbar?
+            <svg class="faq-chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="faq-answer" data-de="KitaRadar ist bundesweit für Deutschland verfügbar. Die Kita-Daten basieren auf öffentlichen Verzeichnissen der Jugendämter und werden regelmäßig aktualisiert. Besonders gut abgedeckt: Frankfurt, Berlin, München, Hamburg, Köln und weitere Großstädte." data-en="KitaRadar is available nationwide across Germany. Daycare data is based on public directories from youth welfare offices and is regularly updated. Best covered cities include Frankfurt, Berlin, Munich, Hamburg, Cologne and other major cities.">Bundesweit verfügbar. Kita-Daten aus öffentlichen Jugendamtsverzeichnissen. Beste Abdeckung: Frankfurt, Berlin, München, Hamburg, Köln.</div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" data-de="Was ist der Community-Feed?" data-en="What is the community feed?">Was ist der Community-Feed?
+            <svg class="faq-chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="faq-answer" data-de="Im Community-Feed teilen Eltern anonymisiert ihre Erfahrungen: welche Kitas haben geantwortet, was hat im Bewerbungsschreiben funktioniert, wie lange war die Wartezeit. Free-Nutzer können lesen, Pro-Nutzer können aktiv beitragen und erhalten Insider-Tipps." data-en="In the community feed, parents share anonymised experiences: which daycare centres responded, what worked in the application letter, how long the waiting time was. Free users can read, Pro users can actively contribute and receive insider tips.">Eltern teilen anonym Erfahrungen: Antwortquoten, Wartezeiten, Bewerbungstipps. Free-User lesen, Pro-User können aktiv beitragen.</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FINAL CTA ══════════════════════════════════════════════ -->
+  <section id="footer-cta" style="background:#070b14;" class="py-28 relative overflow-hidden">
+    <div class="orb w-[500px] h-[500px] bg-indigo-700/20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+    <div class="max-w-4xl mx-auto px-5 text-center relative z-10 reveal">
+      <div class="text-indigo-400 text-xs font-bold uppercase tracking-widest mb-5" data-de="Jetzt loslegen" data-en="Get started">Jetzt loslegen</div>
+      <h2 class="text-4xl md:text-6xl font-black text-white font-display tracking-tight mb-6"><span data-de="Bereit, den Kita-Platz zu finden?" data-en="Ready to find your daycare spot?">Bereit, den Kita-Platz zu finden?</span></h2>
+      <p class="text-white/45 text-lg mb-10 max-w-xl mx-auto" data-de="Jetzt kostenlos starten – KI findet passende Kitas, generiert Bewerbungsschreiben, spart Wochen." data-en="Start free now – AI finds matching daycare centres, generates application letters, saves weeks.">Jetzt kostenlos starten – KI findet passende Kitas, generiert Bewerbungsschreiben, spart Wochen.</p>
+      <div class="flex flex-wrap items-center gap-4 justify-center">
+        <a href="https://kitaradar.vercel.app/" target="_blank" rel="noopener" class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-4 rounded-2xl font-bold text-base transition-all shadow-xl shadow-indigo-900/40 active:scale-95" data-de="Kostenlos starten" data-en="Start free">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          <span data-de="Kostenlos starten" data-en="Start free">Kostenlos starten</span>
+        </a>
+        <a href="#showcase" class="inline-flex items-center gap-2 border border-white/15 hover:border-white/30 text-white/70 hover:text-white px-8 py-4 rounded-2xl font-bold text-base transition-all" data-de="App ansehen" data-en="See the app">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+          <span data-de="App ansehen" data-en="See the app">App ansehen</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FOOTER ═════════════════════════════════════════════════ -->
+  <footer id="site-footer" style="background:#04070d;border-top:1px solid rgba(255,255,255,0.06);" class="py-16">
+    <div class="max-w-7xl mx-auto px-5">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-10 mb-14">
+        <!-- Brand -->
+        <div class="col-span-2 md:col-span-1">
+          <div class="flex items-center gap-2.5 mb-5">
+            <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+              <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+              </svg>
+            </div>
+            <span class="text-lg font-black text-white font-display tracking-tight">KitaRadar</span>
+          </div>
+          <p class="text-white/30 text-sm leading-relaxed mb-5" data-de="KI-gestützte Kita-Platz-Suche für Eltern in Deutschland. Entwickelt von WAMOCON." data-en="AI-powered daycare spot finder for parents in Germany. Developed by WAMOCON.">KI-gestützte Kita-Platz-Suche für Eltern in Deutschland. Entwickelt von WAMOCON.</p>
+          <!-- Germany badge -->
+          <div class="flex items-center gap-2 text-white/25 text-xs font-semibold">
+            <span>🇩🇪</span>
+            <span data-de="Entwickelt in Deutschland" data-en="Made in Germany">Entwickelt in Deutschland</span>
+          </div>
+        </div>
+
+        <!-- Product -->
+        <div>
+          <h4 class="text-white/50 text-xs font-bold uppercase tracking-widest mb-5" data-de="Produkt" data-en="Product">Produkt</h4>
+          <ul class="space-y-3 text-sm">
+            <li><a href="#features" class="text-white/35 hover:text-white transition-colors" data-de="Features" data-en="Features">Features</a></li>
+            <li><a href="#how" class="text-white/35 hover:text-white transition-colors" data-de="Wie es funktioniert" data-en="How it works">Wie es funktioniert</a></li>
+            <li><a href="#roi" class="text-white/35 hover:text-white transition-colors" data-de="Zeit-Rechner" data-en="Time Calculator">Zeit-Rechner</a></li>
+            <li><a href="#pricing" class="text-white/35 hover:text-white transition-colors" data-de="Preise" data-en="Pricing">Preise</a></li>
+            <li><a href="#faq" class="text-white/35 hover:text-white transition-colors">FAQ</a></li>
+          </ul>
+        </div>
+
+        <!-- WAMOCON Products -->
+        <div>
+          <h4 class="text-white/50 text-xs font-bold uppercase tracking-widest mb-5" data-de="WAMOCON Produkte" data-en="WAMOCON Products">WAMOCON Produkte</h4>
+          <ul class="space-y-3 text-sm">
+            <li class="text-white/55 font-semibold flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-indigo-500"></span>KitaRadar
+              <span class="text-[10px] text-indigo-400/60 font-semibold ml-1" data-de="Kita-Suche" data-en="Daycare finder">Kita-Suche</span>
+            </li>
+            <li class="text-white/35 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-teal-500"></span>TRACE
+              <span class="text-[10px] text-teal-400/60 font-semibold ml-1" data-de="Zeiterfassung" data-en="Time tracking">Zeiterfassung</span>
+            </li>
+            <li class="text-white/35 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-blue-500"></span>TeamRadar
+              <span class="text-[10px] text-blue-400/60 font-semibold ml-1" data-de="Verwaltung" data-en="Management">Verwaltung</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Rechtliches -->
+        <div>
+          <h4 class="text-white/50 text-xs font-bold uppercase tracking-widest mb-5" data-de="Rechtliches" data-en="Legal">Rechtliches</h4>
+          <ul class="space-y-3 text-sm">
+            <li><a href="impressum.html" class="text-white/35 hover:text-white transition-colors" data-de="Impressum" data-en="Imprint">Impressum</a></li>
+            <li><a href="datenschutz.html" class="text-white/35 hover:text-white transition-colors" data-de="Datenschutz" data-en="Privacy policy">Datenschutz</a></li>
+            <li><a href="agb.html" class="text-white/35 hover:text-white transition-colors" data-de="AGB" data-en="Terms">AGB</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Bottom bar -->
+      <div class="border-t border-white/6 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p class="text-white/20 text-xs" data-de="© 2026 KitaRadar. Ein Produkt der WAMOCON GmbH. Alle Rechte vorbehalten." data-en="© 2026 KitaRadar. A product of WAMOCON GmbH. All rights reserved.">© 2026 KitaRadar. Ein Produkt der WAMOCON GmbH. Alle Rechte vorbehalten.</p>
+        <div class="flex items-center gap-2 text-white/15 text-xs">
+          <svg class="w-3.5 h-3.5 text-emerald-500" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/></svg>
+          <span data-de="Alle Systeme betriebsbereit" data-en="All systems operational">Alle Systeme betriebsbereit</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══ KONTAKTFORMULAR MODAL ════════════════════════════════ -->
+  <div id="contact-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"
+       class="fixed inset-0 z-[300] flex items-center justify-center p-4"
+       style="display:none; background:rgba(4,7,13,0.82); backdrop-filter:blur(10px);">
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg" style="max-height:92vh;overflow-y:auto;">
+
+      <!-- Letterhead Header (WAMOCON-Stil) -->
+      <div class="flex items-start justify-between px-8 pt-7 pb-5 border-b border-slate-100">
+        <div>
+          <div class="flex items-center gap-2.5 mb-1.5">
+            <div class="w-7 h-7 bg-indigo-600 rounded-lg flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+              </svg>
+            </div>
+            <span class="font-black text-slate-900 font-display tracking-tight">KitaRadar</span>
+            <span class="text-slate-300 mx-1">|</span>
+            <span class="text-sm font-bold text-slate-500">WAMOCON GmbH</span>
+          </div>
+          <p class="text-xs text-slate-400 pl-9">Mergenthalerallee 79–81 · 65760 Eschborn</p>
+        </div>
+        <button onclick="closeContactModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 hover:text-slate-700 transition-colors shrink-0 mt-0.5" aria-label="Schließen">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Form Body -->
+      <div class="px-8 py-7">
+        <h3 id="modal-title" class="text-xl font-bold text-slate-900 font-display mb-1">Anfrage senden</h3>
+        <p class="text-slate-400 text-sm mb-7" data-de="Enterprise-Paket, Demo oder allgemeine KitaRadar-Anfrage" data-en="Enterprise package, demo or general KitaRadar enquiry">Enterprise-Paket, Demo oder allgemeine KitaRadar-Anfrage</p>
+
+        <form id="contact-form" onsubmit="submitContactForm(event)" novalidate class="space-y-4">
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5" for="cf-name">Name *</label>
+              <input id="cf-name" type="text" required autocomplete="name"
+                class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+                placeholder="Max Müller">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5" for="cf-email">E-Mail *</label>
+              <input id="cf-email" type="email" required autocomplete="email"
+                class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+                placeholder="max@unternehmen.de">
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5" for="cf-company">Unternehmen</label>
+            <input id="cf-company" type="text" autocomplete="organization"
+              class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+              placeholder="Musterfirma GmbH">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5" for="cf-subject">Betreff</label>
+            <select id="cf-subject"
+              class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition bg-white">
+              <option value="Enterprise Anfrage">Enterprise Anfrage</option>
+              <option value="KitaRadar Pro – Beratung">KitaRadar Pro – Beratung</option>
+              <option value="Demo anfragen">Demo anfragen</option>
+              <option value="Allgemeine Anfrage">Allgemeine Anfrage</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5" for="cf-message">Nachricht *</label>
+            <textarea id="cf-message" required rows="4"
+              class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition resize-none"
+              placeholder="Wie können wir helfen? Beschreiben Sie Ihre Situation ..."></textarea>
+          </div>
+
+          <div id="cf-error" class="hidden text-sm text-red-500 font-medium">Bitte Name, E-Mail und Nachricht ausfüllen.</div>
+
+          <button type="submit"
+            class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-3.5 rounded-xl font-bold text-sm transition-all shadow-lg shadow-indigo-100 active:scale-95 flex items-center justify-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            Anfrage senden
+          </button>
+          <p class="text-center text-xs text-slate-400">Es öffnet sich dein E-Mail-Programm mit der vorausgefüllten Anfrage.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
