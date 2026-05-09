@@ -411,7 +411,7 @@
   </section>
 
   <!-- ═══ MARKTDATEN-STATISTIKEN ════════════════════════════════ -->
-  <section style="background:#f8fafc;" class="py-16">
+  <section id="how" style="background:#f8fafc;" class="py-16">
     <div class="max-w-7xl mx-auto px-5">
       <div class="text-center mb-10 reveal">
         <p class="text-slate-400 text-xs font-semibold uppercase tracking-widest mb-2" data-de="Belegte Zahlen zum deutschen Kita-Markt" data-en="Verified figures on the German daycare market">Belegte Zahlen zum deutschen Kita-Markt</p>
@@ -449,7 +449,7 @@
         <!-- Step 1 -->
         <div class="flex-1 flex flex-col items-center text-center px-6 reveal">
           <div class="w-16 h-16 rounded-2xl bg-indigo-600 flex items-center justify-center mb-5 shadow-lg shadow-indigo-200">
-            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
           </div>
           <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 font-black text-sm flex items-center justify-center mb-3">1</div>
           <h3 class="font-bold text-slate-900 text-xl mb-2" data-de="Standort &amp; Radius wählen" data-en="Choose location &amp; radius">Standort &amp; Radius wählen</h3>
@@ -461,7 +461,7 @@
         <!-- Step 2 -->
         <div class="flex-1 flex flex-col items-center text-center px-6 reveal">
           <div class="w-16 h-16 rounded-2xl bg-violet-600 flex items-center justify-center mb-5 shadow-lg shadow-violet-200">
-            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
           </div>
           <div class="w-8 h-8 rounded-full bg-violet-100 text-violet-700 font-black text-sm flex items-center justify-center mb-3">2</div>
           <h3 class="font-bold text-slate-900 text-xl mb-2" data-de="KI filtert &amp; priorisiert" data-en="AI filters &amp; prioritises">KI filtert &amp; priorisiert</h3>
@@ -473,7 +473,7 @@
         <!-- Step 3 -->
         <div class="flex-1 flex flex-col items-center text-center px-6 reveal">
           <div class="w-16 h-16 rounded-2xl bg-emerald-600 flex items-center justify-center mb-5 shadow-lg shadow-emerald-200">
-            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
           </div>
           <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 font-black text-sm flex items-center justify-center mb-3">3</div>
           <h3 class="font-bold text-slate-900 text-xl mb-2" data-de="Bewerbung per KI erstellen &amp; senden" data-en="Create &amp; send application with AI">Bewerbung per KI erstellen &amp; senden</h3>
@@ -642,18 +642,6 @@
                 <div class="flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-amber-400"></div><span class="text-[9px] text-slate-500" data-de="Ausstehend" data-en="Pending">Ausstehend</span></div>
                 <div class="flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-indigo-400"></div><span class="text-[9px] text-slate-500" data-de="Antwort" data-en="Reply">Antwort</span></div>
               </div>
-            </div>
-          </div>
-        </div>
-              <div class="flex items-center gap-1.5 shrink-0">
-                <div class="w-2 h-2 rounded-full bg-slate-300"></div>
-                <span class="text-[10px] font-semibold text-slate-400" data-de="Entwurf" data-en="Draft">Entwurf</span>
-              </div>
-            </div>
-            <!-- Disclaimer-Hinweis -->
-            <div class="flex items-start gap-2 mt-3 px-1 bg-amber-50 rounded-xl p-2.5 border border-amber-100">
-              <svg class="w-4 h-4 text-amber-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-              <span class="text-[10px] text-amber-700 leading-snug" data-de="Dieses Dokument ersetzt keine echte Rechtsberatung durch einen Anwalt." data-en="This document does not replace actual legal advice from a lawyer.">Dieses Dokument ersetzt keine echte Rechtsberatung durch einen Anwalt.</span>
             </div>
           </div>
         </div>

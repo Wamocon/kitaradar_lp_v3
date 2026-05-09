@@ -110,27 +110,27 @@
     if (!empSlider || !reqSlider) return;
 
     function update() {
-      var numKitas    = parseInt(empSlider.value, 10);
-      var hoursManual = parseInt(reqSlider.value, 10);
+      var anzahlKitas = parseInt(empSlider.value, 10);
+      var minutenManuellProKita = parseInt(reqSlider.value, 10);
 
-      empLabel.textContent = numKitas;
-      reqLabel.textContent = hoursManual;
+      empLabel.textContent = anzahlKitas;
+      reqLabel.textContent = minutenManuellProKita;
 
       /*
-       * Zeit-Ersparnis-Berechnung:
+       * Zeit-Ersparnis-Berechnung (KitaRadar):
        *
-       * Manuell: numKitas × hoursManual Minuten
-       * Mit KitaRadar: numKitas × 5 Minuten
-       * Ersparnis: numKitas × (hoursManual – 5) Minuten
+       * Manuell: anzahlKitas × minutenManuellProKita Minuten
+       * Mit KitaRadar: anzahlKitas × 5 Minuten (KI-Suche + Bewerbungsbrief)
+       * Ersparnis: anzahlKitas × (minutenManuellProKita – 5) Minuten
        * Quelle: BMFSFJ 2024, Kita-Studie (Zeitaufwand Eltern).
        */
-      var minutenManuell = numKitas * hoursManual;
-      var minutenApp     = numKitas * 5;
+      var minutenManuell = anzahlKitas * minutenManuellProKita;
+      var minutenApp     = anzahlKitas * 5;
       var minutenGespart = Math.max(0, minutenManuell - minutenApp);
-      var stundenGespart = minutenGespart / 60;
+      var gesparteStunden = minutenGespart / 60;
 
       savingsVal.textContent = minutenGespart.toLocaleString('de-DE') + '\u00a0Min.';
-      hoursVal.textContent   = stundenGespart.toFixed(1).replace('.', ',') + '\u00a0Std.';
+      hoursVal.textContent   = gesparteStunden.toFixed(1).replace('.', ',') + '\u00a0Std.';
 
       // Subtle pulse animation
       savingsVal.style.transform = 'scale(1.04)';
