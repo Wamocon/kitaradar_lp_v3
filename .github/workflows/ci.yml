@@ -2,9 +2,9 @@ name: CI – Tests & Checks
 
 on:
   push:
-    branches: [ "**" ]        # every branch, every push
+    branches: [ main ]          # nur main-Pushes direkt auslösen
   pull_request:
-    branches: [ "**" ]
+    branches: [ "**" ]          # PRs lösen den Check aus (kein Doppellauf)
   workflow_dispatch:
 
 permissions:
