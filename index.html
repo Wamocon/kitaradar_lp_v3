@@ -128,7 +128,7 @@
           <!-- Badge -->
           <div class="inline-flex items-center gap-2 bg-indigo-500/10 border border-indigo-500/20 px-4 py-2 rounded-full mb-8 reveal">
             <span class="flex h-2 w-2 rounded-full bg-indigo-400 animate-ping"></span>
-            <span class="text-indigo-300 text-xs font-bold uppercase tracking-widest" data-de="Neu: KI-gestützte Kita-Suche" data-en="New: AI-powered Kita search">Neu: KI-gestützte Kita-Suche</span>
+            <span class="text-indigo-300 text-xs font-bold uppercase tracking-widest" data-de="Neu: ✨ KI-Empfehlungen mit Match-Score" data-en="New: ✨ AI Recommendations with match score">Neu: ✨ KI-Empfehlungen mit Match-Score</span>
           </div>
 
           <h1 class="text-5xl md:text-6xl xl:text-7xl font-black text-white mb-6 tracking-tight font-display leading-[1.05] reveal">
@@ -529,7 +529,7 @@
               <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
             </div>
             <h3 class="text-2xl font-bold text-slate-900 mb-2" data-de="Kartenbasierte Kita-Suche im Umkreis" data-en="Map-based daycare search by radius">Kartenbasierte Kita-Suche im Umkreis</h3>
-            <p class="text-slate-500 mb-6" data-de="Zeige alle Kitas im gewünschten Radius auf der Karte an. Filtere nach Träger, Alter, Öffnungszeiten und freien Plätzen – alles auf einen Blick." data-en="Display all daycare centres within your chosen radius on the map. Filter by provider, age, opening hours and available spots – all at a glance.">Zeige alle Kitas im gewünschten Radius auf der Karte an. Filtere nach Träger, Alter, Öffnungszeiten und freien Plätzen – alles auf einen Blick.</p>
+            <p class="text-slate-500 mb-6" data-de="Zeige alle Kitas im Umkreis auf der Karte an – in 3 Modi: Normal (Vektor), Satellit (ESRI) und 3D-Gebäude (MapLibre GL). Filtere nach Träger, Alter, Öffnungszeiten und freien Plätzen – alles auf einen Blick." data-en="Display all daycare centres within your chosen radius on the map – in 3 modes: Normal (vector), Satellite (ESRI) and 3D Buildings (MapLibre GL). Filter by provider, age, opening hours and available spots.">Zeige alle Kitas im Umkreis auf der Karte an – in 3 Modi: Normal (Vektor), Satellit (ESRI) und 3D-Gebäude (MapLibre GL). Filtere nach Träger, Alter, Öffnungszeiten und freien Plätzen.</p>
             <!-- Map Mockup -->
             <div class="mt-auto bg-slate-50 rounded-2xl p-5 border border-slate-100">
               <div class="flex gap-2 mb-4">
@@ -691,10 +691,11 @@
 
       <!-- Tab buttons -->
       <div class="flex items-center gap-2 overflow-x-auto pb-2 mb-6 justify-center reveal">
-        <button class="tab-btn active" data-tab="dashboard" data-de="Übersicht" data-en="Overview">Übersicht</button>
-        <button class="tab-btn" data-tab="requests" data-de="Meine Bewerbungen" data-en="My Applications">Meine Bewerbungen</button>
+        <button class="tab-btn active" data-tab="dashboard" data-de="Dashboard" data-en="Dashboard">Dashboard</button>
+        <button class="tab-btn" data-tab="requests" data-de="Bewerbungen" data-en="Applications">Bewerbungen</button>
         <button class="tab-btn" data-tab="calendar" data-de="Kita-Suche" data-en="Kita Search">Kita-Suche</button>
-        <button class="tab-btn" data-tab="admin" data-de="Einstellungen" data-en="Settings">Einstellungen</button>
+        <button class="tab-btn" data-tab="admin" data-de="Profil" data-en="Profile">Profil</button>
+        <button class="tab-btn" data-tab="recommendations" data-de="✨ KI-Empfehlungen" data-en="✨ AI Recommendations" style="background:rgba(139,92,246,0.15);border-color:rgba(139,92,246,0.3);color:#c4b5fd;">✨ KI-Empfehlungen</button>
       </div>
 
       <div class="reveal">
@@ -715,11 +716,11 @@
                   </div>
                   <span class="sidebar-logo-text">KitaRadar</span>
                 </div>
-                <div class="sidebar-nav-item active"><div class="nav-dot active"></div>Übersicht</div>
                 <div class="sidebar-nav-item"><div class="nav-dot"></div>Kita-Suche</div>
-                <div class="sidebar-nav-item"><div class="nav-dot"></div>Meine Bewerbungen</div>
                 <div class="sidebar-nav-item"><div class="nav-dot"></div>Community</div>
-                <div class="sidebar-nav-item"><div class="nav-dot"></div>Einstellungen</div>
+                <div class="sidebar-nav-item active"><div class="nav-dot active"></div>Dashboard</div>
+                <div class="sidebar-nav-item"><div class="nav-dot"></div>Preise</div>
+                <div class="sidebar-nav-item" style="color:rgba(139,92,246,0.9);"><div class="nav-dot" style="background:#a855f7;"></div>✨ KI-Empfehlungen</div>
               </div>
               <div class="app-content">
                 <div class="content-title" data-de="Mein Dashboard" data-en="My Dashboard">Mein Dashboard 🏠</div>
@@ -900,7 +901,7 @@
           <div class="app-window">
             <div class="app-window-bar">
               <div class="win-dot win-dot-red"></div><div class="win-dot win-dot-yellow"></div><div class="win-dot win-dot-green"></div>
-              <div class="win-url">kitaradar.vercel.app/settings</div>
+              <div class="win-url">kitaradar.vercel.app/profile</div>
             </div>
             <div class="app-window-body">
               <div class="app-sidebar">
@@ -908,15 +909,26 @@
                   <div class="sidebar-logo-icon"><svg width="14" height="14" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="18" stroke="#fff" stroke-width="2.5" opacity="0.3"/><circle cx="20" cy="20" r="12" stroke="#fff" stroke-width="2.5" opacity="0.5"/><circle cx="20" cy="20" r="6" stroke="#fff" stroke-width="2.5" opacity="0.8"/><path d="M20 8C16.13 8 13 11.13 13 15C13 20.25 20 28 20 28C20 28 27 20.25 27 15C27 11.13 23.87 8 20 8Z" fill="#fff"/><path d="M20 11.5L15.5 15.5H16.5V19H19V17H21V19H23.5V15.5H24.5L20 11.5Z" fill="#2563eb" opacity="0.9"/></svg></div>
                   <span class="sidebar-logo-text">KitaRadar</span>
                 </div>
-                <div class="sidebar-nav-item"><div class="nav-dot"></div>Übersicht</div>
                 <div class="sidebar-nav-item"><div class="nav-dot"></div>Kita-Suche</div>
-                <div class="sidebar-nav-item"><div class="nav-dot"></div>Meine Bewerbungen</div>
                 <div class="sidebar-nav-item"><div class="nav-dot"></div>Community</div>
-                <div class="sidebar-nav-item active"><div class="nav-dot active"></div>Einstellungen</div>
+                <div class="sidebar-nav-item"><div class="nav-dot"></div>Dashboard</div>
+                <div class="sidebar-nav-item"><div class="nav-dot"></div>Preise</div>
+                <div class="sidebar-nav-item" style="color:rgba(139,92,246,0.9);"><div class="nav-dot" style="background:#a855f7;"></div>✨ KI-Empfehlungen</div>
               </div>
               <div class="app-content">
+                <div class="content-title" data-de="Mein Profil (9 Tabs)" data-en="My Profile (9 tabs)">Mein Profil</div>
                 <div class="content-title" data-de="Einstellungen" data-en="Settings">Einstellungen</div>
-                <!-- Plan-Karte (Free Plan, wie auf der Einstellungsseite) -->
+                <!-- 9-Tab Navigation -->
+                <div style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:10px;">
+                  <div style="padding:3px 7px;border-radius:8px;background:#2563eb;color:#fff;font-size:8px;font-weight:700;">Mein Plan</div>
+                  <div style="padding:3px 7px;border-radius:8px;background:rgba(59,130,246,0.12);color:#60a5fa;font-size:8px;font-weight:600;">Daten</div>
+                  <div style="padding:3px 7px;border-radius:8px;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.35);font-size:8px;font-weight:600;">Familie</div>
+                  <div style="padding:3px 7px;border-radius:8px;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.35);font-size:8px;font-weight:600;">Beruf</div>
+                  <div style="padding:3px 7px;border-radius:8px;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.35);font-size:8px;font-weight:600;">Kinder</div>
+                  <div style="padding:3px 7px;border-radius:8px;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.35);font-size:8px;font-weight:600;">KI</div>
+                  <div style="padding:3px 7px;border-radius:8px;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.35);font-size:8px;font-weight:600;">Datenschutz</div>
+                </div>
+                <!-- Plan-Karte -->
                 <div style="background:rgba(37,99,235,0.1);border:1px solid rgba(59,130,246,0.25);border-radius:12px;padding:10px 12px;margin-bottom:10px;">
                   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
                     <span style="font-size:10px;font-weight:700;color:#60a5fa;">Free-Plan</span>
@@ -927,32 +939,106 @@
                     <div style="height:100%;width:70%;background:#2563eb;border-radius:4px;"></div>
                   </div>
                 </div>
-                <!-- Profil-Felder -->
+                <!-- DSGVO-Einwilligung Banner -->
+                <div style="display:flex;align-items:center;gap:6px;background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.2);border-radius:10px;padding:6px 10px;margin-bottom:8px;">
+                  <svg class="w-3 h-3 shrink-0" style="color:#34d399" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                  <span style="font-size:8px;color:#6ee7b7;font-weight:600;">Datenschutz-Einwilligung erteilt – KI aktiv</span>
+                </div>
+                <!-- Persönliche Daten -->
                 <div style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;">Persönliche Daten</div>
                 <div class="space-y-2">
                   <div class="glass-card-dark rounded-lg p-2.5" style="display:flex;align-items:center;gap:8px;">
                     <div style="font-size:9px;color:rgba(255,255,255,0.4);width:55px;flex-shrink:0;">Name</div>
-                    <div style="height:4px;border-radius:2px;background:rgba(255,255,255,0.08);flex:1;width:70%;"></div>
+                    <div style="height:4px;border-radius:2px;background:rgba(255,255,255,0.08);flex:1;"></div>
                   </div>
                   <div class="glass-card-dark rounded-lg p-2.5" style="display:flex;align-items:center;gap:8px;">
-                    <div style="font-size:9px;color:rgba(255,255,255,0.4);width:55px;flex-shrink:0;">E-Mail</div>
-                    <div style="height:4px;border-radius:2px;background:rgba(255,255,255,0.08);flex:1;width:80%;"></div>
+                    <div style="font-size:9px;color:rgba(255,255,255,0.4);width:55px;flex-shrink:0;">Beruf</div>
+                    <div style="height:4px;border-radius:2px;background:rgba(255,255,255,0.08);flex:1;"></div>
                   </div>
                   <div class="glass-card-dark rounded-lg p-2.5" style="display:flex;align-items:center;gap:8px;">
-                    <div style="font-size:9px;color:rgba(255,255,255,0.4);width:55px;flex-shrink:0;">Standort</div>
-                    <div style="height:4px;border-radius:2px;background:rgba(255,255,255,0.08);flex:1;width:65%;"></div>
+                    <div style="font-size:9px;color:rgba(255,255,255,0.4);width:55px;flex-shrink:0;">Pädagogik</div>
+                    <div style="font-size:9px;padding:2px 8px;border-radius:8px;background:rgba(139,92,246,0.15);color:#c4b5fd;">Montessori</div>
                   </div>
-                </div>
-                <!-- Sprache & Theme -->
-                <div style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:.05em;margin:8px 0 5px;">Darstellung</div>
-                <div class="glass-card-dark rounded-lg p-2.5 flex items-center gap-3">
-                  <div style="font-size:10px;color:#fff;flex:1;">Sprache</div>
-                  <div style="font-size:9px;padding:2px 8px;border-radius:8px;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.5);">Deutsch</div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+        <!-- TAB: KI-Empfehlungen -->
+        <div id="tab-recommendations" class="tab-panel">
+          <div class="app-window">
+            <div class="app-window-bar">
+              <div class="win-dot win-dot-red"></div><div class="win-dot win-dot-yellow"></div><div class="win-dot win-dot-green"></div>
+              <div class="win-url">kitaradar.vercel.app/recommendations</div>
+            </div>
+            <div class="app-window-body">
+              <div class="app-sidebar">
+                <div class="sidebar-logo-row">
+                  <div class="sidebar-logo-icon"><svg width="14" height="14" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="18" stroke="#fff" stroke-width="2.5" opacity="0.3"/><circle cx="20" cy="20" r="12" stroke="#fff" stroke-width="2.5" opacity="0.5"/><circle cx="20" cy="20" r="6" stroke="#fff" stroke-width="2.5" opacity="0.8"/><path d="M20 8C16.13 8 13 11.13 13 15C13 20.25 20 28 20 28C20 28 27 20.25 27 15C27 11.13 23.87 8 20 8Z" fill="#fff"/><path d="M20 11.5L15.5 15.5H16.5V19H19V17H21V19H23.5V15.5H24.5L20 11.5Z" fill="#2563eb" opacity="0.9"/></svg></div>
+                  <span class="sidebar-logo-text">KitaRadar</span>
+                </div>
+                <div class="sidebar-nav-item"><div class="nav-dot"></div>Kita-Suche</div>
+                <div class="sidebar-nav-item"><div class="nav-dot"></div>Community</div>
+                <div class="sidebar-nav-item"><div class="nav-dot"></div>Dashboard</div>
+                <div class="sidebar-nav-item"><div class="nav-dot"></div>Preise</div>
+                <div class="sidebar-nav-item active" style="color:rgba(139,92,246,0.9);"><div class="nav-dot" style="background:#a855f7;"></div>✨ KI-Empfehlungen</div>
+              </div>
+              <div class="app-content">
+                <div class="content-title">✨ KI-Empfehlungen</div>
+                <!-- Profil-Kontext -->
+                <div style="display:flex;align-items:center;gap:6px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.25);border-radius:10px;padding:6px 10px;margin-bottom:10px;">
+                  <svg class="w-3 h-3 shrink-0" style="color:#a78bfa" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                  <span style="font-size:9px;color:#c4b5fd;font-weight:600;flex:1;" data-de="Basierend auf: Montessori · 0–2 J. · Frankfurt" data-en="Based on: Montessori · 0–2 y. · Frankfurt">Basierend auf: Montessori · 0–2 J. · Frankfurt</span>
+                </div>
+                <!-- Empfehlungs-Cards mit Match-Score -->
+                <div class="space-y-2">
+                  <!-- Empfehlung 1: 94% Match -->
+                  <div class="glass-card-dark rounded-xl p-3">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+                      <div style="font-size:11px;font-weight:700;color:#fff;">Kita Sonnenschein</div>
+                      <div style="font-size:10px;font-weight:800;color:#a78bfa;">94 % Match</div>
+                    </div>
+                    <div style="height:4px;background:rgba(255,255,255,0.08);border-radius:4px;margin-bottom:5px;overflow:hidden;">
+                      <div style="height:100%;width:94%;background:linear-gradient(90deg,#7c3aed,#a855f7);border-radius:4px;"></div>
+                    </div>
+                    <div style="font-size:9px;color:rgba(255,255,255,0.4);">Montessori · 0–3 J. · 0,4 km</div>
+                    <div style="display:flex;gap:3px;margin-top:4px;flex-wrap:wrap;">
+                      <span style="font-size:8px;padding:1px 6px;border-radius:8px;background:rgba(52,211,153,0.15);color:#6ee7b7;">Konzept passt</span>
+                      <span style="font-size:8px;padding:1px 6px;border-radius:8px;background:rgba(96,165,250,0.15);color:#93c5fd;">Altersgruppe ideal</span>
+                    </div>
+                  </div>
+                  <!-- Empfehlung 2: 82% Match -->
+                  <div class="glass-card-dark rounded-xl p-3">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+                      <div style="font-size:11px;font-weight:700;color:#fff;">Kita Regenbogen</div>
+                      <div style="font-size:10px;font-weight:800;color:#818cf8;">82 % Match</div>
+                    </div>
+                    <div style="height:4px;background:rgba(255,255,255,0.08);border-radius:4px;margin-bottom:5px;overflow:hidden;">
+                      <div style="height:100%;width:82%;background:linear-gradient(90deg,#4f46e5,#6366f1);border-radius:4px;"></div>
+                    </div>
+                    <div style="font-size:9px;color:rgba(255,255,255,0.4);">Situationsansatz · 1–6 J. · 1,2 km</div>
+                    <div style="display:flex;gap:3px;margin-top:4px;flex-wrap:wrap;">
+                      <span style="font-size:8px;padding:1px 6px;border-radius:8px;background:rgba(245,158,11,0.15);color:#fcd34d;">Gute Erreichbarkeit</span>
+                    </div>
+                  </div>
+                  <!-- Empfehlung 3: 74% Match -->
+                  <div class="glass-card-dark rounded-xl p-3">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+                      <div style="font-size:11px;font-weight:700;color:#fff;">Kita Zauberwald</div>
+                      <div style="font-size:10px;font-weight:800;color:rgba(255,255,255,0.5);">74 % Match</div>
+                    </div>
+                    <div style="height:4px;background:rgba(255,255,255,0.08);border-radius:4px;margin-bottom:5px;overflow:hidden;">
+                      <div style="height:100%;width:74%;background:rgba(255,255,255,0.2);border-radius:4px;"></div>
+                    </div>
+                    <div style="font-size:9px;color:rgba(255,255,255,0.4);">Waldorf · 0–6 J. · 1,8 km</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
@@ -967,8 +1053,8 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         <div class="glass-card rounded-2xl p-6 reveal">
           <div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center mb-4"><svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
-          <h3 class="font-bold text-slate-900 mb-2" data-de="Kartensuche mit Umkreis" data-en="Map search with radius">Kartensuche mit Umkreis</h3>
-          <p class="text-slate-500 text-sm" data-de="Alle Kitas in deinem Umkreis auf der Karte sehen – freie Plätze farblich markiert. Direkter Zugriff auf Kontaktdaten, Öffnungszeiten und Träger." data-en="See all daycare centres in your area on the map – free spots highlighted in colour. Direct access to contact details, opening hours and provider.">Alle Kitas im Umkreis auf der Karte sehen – freie Plätze farblich markiert. Kontaktdaten und Öffnungszeiten direkt abrufbar.</p>
+          <h3 class="font-bold text-slate-900 mb-2" data-de="Kartensuche – 3 Ansichtsmodi" data-en="Map search – 3 view modes">Kartensuche – 3 Ansichtsmodi</h3>
+          <p class="text-slate-500 text-sm" data-de="Alle Kitas im Umkreis auf der Karte – in 3 Modi: Normal (Vektor), Satellit (ESRI) und 3D-Gebäude (MapLibre GL). Freie Plätze farblich markiert, Kontaktdaten und Öffnungszeiten direkt abrufbar." data-en="All daycare centres on the map – in 3 modes: Normal (vector), Satellite (ESRI) and 3D Buildings (MapLibre GL). Free spots highlighted in colour, contact details and opening hours directly accessible.">Alle Kitas im Umkreis – in 3 Modi: Normal, Satellit (ESRI) und 3D-Gebäude (MapLibre GL). Freie Plätze farblich markiert, Kontaktdaten direkt abrufbar.</p>
         </div>
         <div class="glass-card rounded-2xl p-6 reveal">
           <div class="w-10 h-10 rounded-xl bg-violet-50 flex items-center justify-center mb-4"><svg class="w-5 h-5 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/></svg></div>
@@ -991,12 +1077,27 @@
         <div class="glass-card rounded-2xl p-6 reveal">
           <div class="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center mb-4"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg></div>
           <h3 class="font-bold text-slate-900 mb-2" data-de="DSGVO &amp; Datensicherheit" data-en="GDPR &amp; data security">DSGVO &amp; Datensicherheit</h3>
-          <p class="text-slate-500 text-sm" data-de="Authentifizierung via Supabase, rollenbasierter Zugriff (RLS), Datenspeicherung ausschließlich auf EU-Servern. Keine Weitergabe an Dritte." data-en="Authentication via Supabase, role-based access control (RLS), data storage exclusively on EU servers. No sharing with third parties.">Authentifizierung via Supabase, RLS, EU-Datenspeicherung. Keine Weitergabe an Dritte.</p>
+          <p class="text-slate-500 text-sm" data-de="Authentifizierung via Supabase, rollenbasierter Zugriff (RLS), Datenspeicherung ausschließlich auf EU-Servern. DSGVO-Einwilligungsdialog für KI-Datenverarbeitung (Art. 6 Abs. 1 lit. a DSGVO). Keine Weitergabe an Dritte." data-en="Authentication via Supabase, role-based access control (RLS), data storage exclusively on EU servers. GDPR consent dialog for AI data processing (Art. 6(1)(a) GDPR). No sharing with third parties.">Authentifizierung via Supabase, RLS, EU-Datenspeicherung. DSGVO-Einwilligungsdialog für KI-Verarbeitung (Art. 6 Abs. 1 lit. a). Keine Weitergabe an Dritte.</p>
         </div>
         <div class="glass-card rounded-2xl p-6 reveal">
           <div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center mb-4"><svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm0 8a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zm12 0a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/></svg></div>
           <h3 class="font-bold text-slate-900 mb-2" data-de="WAMOCON-Produktfamilie" data-en="WAMOCON product family">WAMOCON-Produktfamilie</h3>
           <p class="text-slate-500 text-sm" data-de="KitaRadar ist Teil der WAMOCON-Produktfamilie. Als Micro-Frontend in TeamRadar einbettbar – für Unternehmen mit mehreren WAMOCON-Apps." data-en="KitaRadar is part of the WAMOCON product family. Embeddable as a micro-frontend in TeamRadar – for companies with multiple WAMOCON apps.">KitaRadar ist Teil der WAMOCON-Produktfamilie – als Micro-Frontend in TeamRadar einbettbar.</p>
+        </div>
+        <!-- NEW: KI-Empfehlungen -->
+        <div class="glass-card rounded-2xl p-6 reveal">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:linear-gradient(135deg,#eef2ff,#f5f3ff);"><svg class="w-5 h-5" style="color:#6366f1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg></div>
+          <div class="flex items-center gap-2 mb-2">
+            <h3 class="font-bold text-slate-900" data-de="✨ KI-Empfehlungen" data-en="✨ AI Recommendations">✨ KI-Empfehlungen</h3>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-600" data-de="Pro" data-en="Pro">Pro</span>
+          </div>
+          <p class="text-slate-500 text-sm" data-de="Personalisierte Kita-Empfehlungen per KI – mit Match-Score, Stärken und konkreten Gründen, warum eine Kita zu Ihrer Familie passt. Basierend auf Kindprofil, Pädagogik-Präferenz, Trägertyp und Standort." data-en="Personalised daycare recommendations by AI – with match score, strengths and concrete reasons why a daycare suits your family. Based on child profile, pedagogy preference, provider type and location.">Personalisierte Kita-Empfehlungen per KI – mit Match-Score, Stärken und konkreten Gründen basierend auf Kindprofil, Pädagogik-Präferenz und Standort.</p>
+        </div>
+        <!-- NEW: Benachrichtigungen -->
+        <div class="glass-card rounded-2xl p-6 reveal">
+          <div class="w-10 h-10 rounded-xl bg-sky-50 flex items-center justify-center mb-4"><svg class="w-5 h-5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg></div>
+          <h3 class="font-bold text-slate-900 mb-2" data-de="Echtzeit-Benachrichtigungen" data-en="Real-time notifications">Echtzeit-Benachrichtigungen</h3>
+          <p class="text-slate-500 text-sm" data-de="Sofortige Benachrichtigungen bei Bewerbungsantworten, neuen KI-Kita-Matches, Community-Updates und Systemhinweisen – direkt in der App über die Notification-Bell." data-en="Instant notifications for application responses, new AI daycare matches, community updates and system alerts – directly in the app via the notification bell.">Sofortige Benachrichtigungen bei Bewerbungsantworten, KI-Kita-Matches und Community-Updates – direkt in der App über die Notification-Bell.</p>
         </div>
       </div>
     </div>
@@ -1095,8 +1196,10 @@
             <div class="pf-row"><svg class="check-ico w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg><span data-de="Unbegrenzte Kita-Suchen" data-en="Unlimited daycare searches">Unbegrenzte Kita-Suchen</span></div>
             <div class="pf-row"><svg class="check-ico w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg><span data-de="KI-Suchassistent (Chat)" data-en="AI search assistant (chat)">KI-Suchassistent (Chat)</span></div>
             <div class="pf-row"><svg class="check-ico w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg><span data-de="KI-Bewerbungsgenerator (mailto)" data-en="AI application generator (mailto)">KI-Bewerbungsgenerator (mailto)</span></div>
+            <div class="pf-row"><svg class="check-ico w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg><span data-de="✨ KI-Empfehlungen mit Match-Score" data-en="✨ AI Recommendations with match score">✨ KI-Empfehlungen mit Match-Score</span></div>
             <div class="pf-row"><svg class="check-ico w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg><span data-de="Bewerbungs-Tracking" data-en="Application tracking">Bewerbungs-Tracking</span></div>
             <div class="pf-row"><svg class="check-ico w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg><span data-de="Community-Feed (lesen &amp; schreiben)" data-en="Community feed (read &amp; write)">Community-Feed (lesen &amp; schreiben)</span></div>
+            <div class="pf-row"><svg class="check-ico w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg><span data-de="Echtzeit-Benachrichtigungen" data-en="Real-time notifications">Echtzeit-Benachrichtigungen</span></div>
             <div class="pf-row"><svg class="check-ico w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg><span data-de="Prioritäts-Support" data-en="Priority support">Prioritäts-Support</span></div>
           </div>
         </div>
@@ -1199,6 +1302,13 @@
             <svg class="faq-chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </button>
           <div class="faq-answer" data-de="KitaRadar ist bundesweit für Deutschland verfügbar. Die Kita-Daten basieren auf öffentlichen Verzeichnissen der Jugendämter und werden regelmäßig aktualisiert. Besonders gut abgedeckt: Frankfurt, Berlin, München, Hamburg, Köln und weitere Großstädte." data-en="KitaRadar is available nationwide across Germany. Daycare data is based on public directories from youth welfare offices and is regularly updated. Best covered cities include Frankfurt, Berlin, Munich, Hamburg, Cologne and other major cities.">Bundesweit verfügbar. Kita-Daten aus öffentlichen Jugendamtsverzeichnissen. Beste Abdeckung: Frankfurt, Berlin, München, Hamburg, Köln.</div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" data-de="Was sind KI-Empfehlungen?" data-en="What are AI Recommendations?">Was sind KI-Empfehlungen?
+            <svg class="faq-chevron w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="faq-answer" data-de="KI-Empfehlungen ist eine Pro-Funktion, die auf Basis Ihres Kindprofils, Ihrer Pädagogik-Präferenz, bevorzugtem Trägertyp und Standort personalisierte Kita-Empfehlungen mit einem Match-Score (0–100 %) generiert. Für jede Kita werden konkrete Stärken, Überlegungen und Gründe angezeigt, warum sie zu Ihrer Familie passt." data-en="AI Recommendations is a Pro feature that generates personalised daycare recommendations with a match score (0–100%) based on your child profile, pedagogy preference, preferred provider type and location. For each daycare, concrete strengths, considerations and reasons are shown why it suits your family.">KI-Empfehlungen ist eine Pro-Funktion mit Match-Score (0–100 %) basierend auf Kindprofil, Pädagogik-Präferenz und Standort. Für jede Kita werden Stärken und konkrete Gründe angezeigt.</div>
         </div>
 
         <div class="faq-item">
